@@ -18,7 +18,9 @@ namespace MALClient.XShared.JsonModels.MAL
         {
             using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
-            await using var stream = await response.Content.ReadAsStreamAsync();
+            // NB: plain 'using', not 'await using' — this library targets netstandard2.0,
+            // where Stream does not implement IAsyncDisposable yet.
+            using var stream = await response.Content.ReadAsStreamAsync();
             return await JsonSerializer.DeserializeAsync<T>(stream);
         }
     }
