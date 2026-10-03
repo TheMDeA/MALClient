@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using MALClient.Models.Enums;
 using MALClient.Models.Models.AnimeScrapped;
@@ -38,13 +37,13 @@ namespace MALClient.XShared.Comm.Anime
 
                 if (_animeMode)
                 {
-                    var result = JsonSerializer.Deserialize<AnimeEntry>(await client.GetStringAsync(apiUrl));
+                    var result = await MalApiClient.GetJsonAsync<AnimeEntry>(client, apiUrl);
                     AddRelated(output, result.RelatedAnime, RelatedItemType.Anime);
                     AddRelated(output, result.RelatedManga, RelatedItemType.Manga);
                 }
                 else
                 {
-                    var result = JsonSerializer.Deserialize<MangaEntry>(await client.GetStringAsync(apiUrl));
+                    var result = await MalApiClient.GetJsonAsync<MangaEntry>(client, apiUrl);
                     AddRelated(output, result.RelatedAnime, RelatedItemType.Anime);
                     AddRelated(output, result.RelatedManga, RelatedItemType.Manga);
                 }

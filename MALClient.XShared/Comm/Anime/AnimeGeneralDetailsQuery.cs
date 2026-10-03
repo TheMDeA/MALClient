@@ -1,18 +1,14 @@
-﻿using Android.Runtime;
-using MALClient.Models.Enums;
+﻿using MALClient.Models.Enums;
 using MALClient.Models.Models.Anime;
 using MALClient.XShared.Comm.Manga;
 using MALClient.XShared.JsonModels.MAL;
 using MALClient.XShared.Utils;
 using MALClient.XShared.ViewModels;
-using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace MALClient.XShared.Comm.Anime
 {
@@ -37,8 +33,7 @@ namespace MALClient.XShared.Comm.Anime
                             if (animeMode)
                             {
                                 var apiUrl = $"https://api.myanimelist.net/v2/anime/{id}?fields=num_episodes,status,media_type,alternative_titles,start_date,end_date,main_picture,pictures,mean,id,synopsis,title";
-                                var result = JsonSerializer.Deserialize<AnimeEntry>(
-                                    await client.GetStringAsync(apiUrl));
+                                var result = await MalApiClient.GetJsonAsync<AnimeEntry>(client, apiUrl);
                                 output = new AnimeGeneralDetailsData
                                 {
                                     AllEpisodes = (int)(result.Episodes ?? 0),
@@ -68,8 +63,7 @@ namespace MALClient.XShared.Comm.Anime
                             else
                             {
                                 var apiUrl = $"https://api.myanimelist.net/v2/manga/{id}?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,status,media_type,num_volumes,num_chapters";
-                                var result = JsonSerializer.Deserialize<MangaEntry>(
-                                    await client.GetStringAsync(apiUrl));
+                                var result = await MalApiClient.GetJsonAsync<MangaEntry>(client, apiUrl);
 
                                 output = new AnimeGeneralDetailsData
                                 {

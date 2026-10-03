@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using MALClient.Models.Enums;
 using MALClient.Models.Models.Anime;
@@ -29,8 +28,7 @@ namespace MALClient.XShared.Comm.Anime
                 var apiUrl =
                     $"https://api.myanimelist.net/v2/anime?q={Uri.EscapeDataString(_query)}&limit=50&nsfw=true&fields=id,title,main_picture,mean,media_type,num_episodes,synopsis,status";
                 var searchResult =
-                    JsonSerializer.Deserialize<PaginatedMALResponse<ICollection<AnimeNode<AnimeEntry>>>>(
-                        await client.GetStringAsync(apiUrl));
+                    await MalApiClient.GetJsonAsync<PaginatedMALResponse<ICollection<AnimeNode<AnimeEntry>>>>(client, apiUrl);
 
                 foreach (var result in searchResult.Data)
                 {

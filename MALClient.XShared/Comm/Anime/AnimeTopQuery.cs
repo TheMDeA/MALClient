@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using MALClient.Models.Models.AnimeScrapped;
 using MALClient.XShared.JsonModels.MAL;
@@ -122,8 +121,8 @@ namespace MALClient.XShared.Comm.Anime
                 return await GetTopMangaDataByType(force);
 
             if (!force)
-                if (_prevQueriesCache.ContainsKey(_type))
-                    return _prevQueriesCache[_type];
+                if (_prevQueriesCache.TryGetValue(_type, out var cachedTop))
+                    return cachedTop;
 
             var output = force ? new List<TopAnimeData>() : (await DataCache.RetrieveTopAnimeData(_type) ?? new List<TopAnimeData>());
             if (output.Count > 0)
@@ -143,8 +142,7 @@ namespace MALClient.XShared.Comm.Anime
                     var apiUrl =
                         $"https://api.myanimelist.net/v2/manga/ranking?ranking_type={rankingType}&limit=50&offset={offset}&nsfw=true&fields=id,title,main_picture,mean,num_volumes,num_chapters";
                     var ranking =
-                        JsonSerializer.Deserialize<PaginatedMALResponse<ICollection<RankingEntry<MangaEntry>>>>(
-                            await client.GetStringAsync(apiUrl));
+                        await MalApiClient.GetJsonAsync<PaginatedMALResponse<ICollection<RankingEntry<MangaEntry>>>>(client, apiUrl);
 
                     foreach (var entry in ranking.Data)
                     {
@@ -165,8 +163,7 @@ namespace MALClient.XShared.Comm.Anime
                     var apiUrl =
                         $"https://api.myanimelist.net/v2/anime/ranking?ranking_type={rankingType}&limit=50&offset={offset}&nsfw=true&fields=id,title,main_picture,mean,num_episodes";
                     var ranking =
-                        JsonSerializer.Deserialize<PaginatedMALResponse<ICollection<RankingEntry<AnimeEntry>>>>(
-                            await client.GetStringAsync(apiUrl));
+                        await MalApiClient.GetJsonAsync<PaginatedMALResponse<ICollection<RankingEntry<AnimeEntry>>>>(client, apiUrl);
 
                     foreach (var entry in ranking.Data)
                     {
@@ -188,8 +185,8 @@ namespace MALClient.XShared.Comm.Anime
                 return new List<TopAnimeData>();
             }
 
-            if (_page != 0 && _prevQueriesCache.ContainsKey(_type)) //merge data
-                output = _prevQueriesCache[_type].Union(output).Distinct().ToList();
+            if (_page != 0 && _prevQueriesCache.TryGetValue(_type, out var previous)) //merge data
+                output = previous.Union(output).ToList(); // Union already dedupes; no extra Distinct() pass
 
             DataCache.SaveTopAnimeData(output, _type);
             _prevQueriesCache[_type] = output;
@@ -213,8 +210,7 @@ namespace MALClient.XShared.Comm.Anime
                 var apiUrl =
                     $"https://api.myanimelist.net/v2/manga/ranking?ranking_type={rankingType}&limit=50&offset={offset}&nsfw=true&fields=id,title,main_picture,mean,num_volumes,num_chapters";
                 var ranking =
-                    JsonSerializer.Deserialize<PaginatedMALResponse<ICollection<RankingEntry<MangaEntry>>>>(
-                        await client.GetStringAsync(apiUrl));
+                    await MalApiClient.GetJsonAsync<PaginatedMALResponse<ICollection<RankingEntry<MangaEntry>>>>(client, apiUrl);
 
                 foreach (var entry in ranking.Data)
                 {
