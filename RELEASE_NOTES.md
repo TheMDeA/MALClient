@@ -1,6 +1,6 @@
-# MALClient v1.5.15.0
+# MALClient v1.5.15.1
 
-APK version: **1.5.15.0** (versionCode 171), package `com.dmda.malclient`.
+APK version: **1.5.15.1** (versionCode 172), package `com.dmda.malclient`.
 
 ### Changed
 

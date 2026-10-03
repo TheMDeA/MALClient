@@ -9,7 +9,7 @@ _(nothing else pending)_
 
 ## [2026-10-03] — feature push (calendar seasonal view, follow-system theme, Material You)
 
-APK version: **1.5.15.0** (versionCode 171), package `com.dmda.malclient`.
+APK version: **1.5.15.1** (versionCode 172), package `com.dmda.malclient`.
 
 ### Changed
 
@@ -32,13 +32,18 @@ APK version: **1.5.15.0** (versionCode 171), package `com.dmda.malclient`.
   the app follows the Android system dark/light theme (re-applied whenever
   the activity restarts, e.g. on system theme change); all theme checks now
   go through the resolved `Settings.IsDarkTheme`/`EffectiveTheme`.
-- Accent: new "Material You" dynamic-color accent option (Android 12+; hidden
-  on older versions). When selected, the app accent follows the wallpaper-
-  derived system palette via `values-v31` theme overlays
-  (`system_accent1/2_*`); the settings button previews the live system
-  accent. Falls back to Orange on older Android.
+- Accent: new "Material You dynamic colors" toggle in Settings → General
+  (Android 12+; the whole option is hidden on older versions). When enabled,
+  the app accent follows the wallpaper-derived system palette via
+  `values-v31` theme overlays (`system_accent1/2_*`), overriding the
+  selected color template; disable it to go back to the fixed accents.
 
 ### Fixed
+
+- Crash opening Settings → Calendar: the seasonal-view toggle binding used
+  `WhenSourceChanges` on a TwoWay binding, which MVVM Light forbids
+  (`InvalidOperationException`). The rebuild-on-toggle now uses the switch's
+  `CheckedChange` event with a last-built guard instead.
 
 - Calendar airing data going stale: `AiringInfoProvider` previously loaded the
   airing feed only once per app process, so if the app stayed alive in the

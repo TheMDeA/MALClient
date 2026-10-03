@@ -100,6 +100,16 @@ namespace MALClient.XShared.Utils
             SelectedTheme == 1 || (ThemeFollowsSystem && SystemInDarkMode);
 
         /// <summary>
+        /// When true, the app accent follows the system's Material You dynamic
+        /// colors (Android 12+) instead of the selected color template.
+        /// </summary>
+        public static bool MaterialYouEnabled
+        {
+            get => (bool)(ApplicationDataService["MaterialYouEnabled"] ?? false);
+            set => ApplicationDataService["MaterialYouEnabled"] = value;
+        }
+
+        /// <summary>
         /// <see cref="IsDarkTheme"/> as the 0/1 value the rest of the app expects.
         /// </summary>
         public static int EffectiveTheme => IsDarkTheme ? 1 : 0;

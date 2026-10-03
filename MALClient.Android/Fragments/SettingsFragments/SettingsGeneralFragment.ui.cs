@@ -32,7 +32,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
         private ImageButton _settingsPageGeneralColorCyan;
         private ImageButton _settingsPageGeneralColorSkyBlue;
         private ImageButton _settingsPageGeneralColorRed;
-        private ImageButton _settingsPageGeneralColorMaterialYou;
+        private Switch _settingsPageGeneralMaterialYouSwitch;
         private Switch _settingsPageGeneralAmoledSwitch;
         private Button _settingsPageGeneralThemeChangeApply;
         private Switch _settingsPageGeneralEnableSwipeSwitch;
@@ -102,7 +102,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
         public ImageButton SettingsPageGeneralColorCyan => _settingsPageGeneralColorCyan ?? (_settingsPageGeneralColorCyan = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorCyan));
         public ImageButton SettingsPageGeneralColorSkyBlue => _settingsPageGeneralColorSkyBlue ?? (_settingsPageGeneralColorSkyBlue = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorSkyBlue));
         public ImageButton SettingsPageGeneralColorRed => _settingsPageGeneralColorRed ?? (_settingsPageGeneralColorRed = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorRed));
-        public ImageButton SettingsPageGeneralColorMaterialYou => _settingsPageGeneralColorMaterialYou ?? (_settingsPageGeneralColorMaterialYou = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorMaterialYou));
+        public Switch SettingsPageGeneralMaterialYouSwitch => _settingsPageGeneralMaterialYouSwitch ?? (_settingsPageGeneralMaterialYouSwitch = FindViewById<Switch>(Resource.Id.SettingsPageGeneralMaterialYouSwitch));
         public Switch SettingsPageGeneralAmoledSwitch => _settingsPageGeneralAmoledSwitch ?? (_settingsPageGeneralAmoledSwitch = FindViewById<Switch>(Resource.Id.SettingsPageGeneralAmoledSwitch));
         public Button SettingsPageGeneralThemeChangeApply => _settingsPageGeneralThemeChangeApply ?? (_settingsPageGeneralThemeChangeApply = FindViewById<Button>(Resource.Id.SettingsPageGeneralThemeChangeApply));
         public Switch SettingsPageGeneralEnableSwipeSwitch => _settingsPageGeneralEnableSwipeSwitch ?? (_settingsPageGeneralEnableSwipeSwitch = FindViewById<Switch>(Resource.Id.SettingsPageGeneralEnableSwipeSwitch));
