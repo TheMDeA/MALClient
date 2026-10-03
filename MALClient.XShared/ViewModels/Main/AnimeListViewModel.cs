@@ -1071,14 +1071,26 @@ namespace MALClient.XShared.ViewModels.Main
                 // The season archive is deterministic calendar data: generate it locally
                 // instead of calling Jikan's /seasons endpoint. Jikan failures were
                 // swallowed by the catch below and left the dropdown blank.
-                // Order matches the old archive: newest year first, Winter -> Fall.
-                var currentYear = DateTime.UtcNow.Year;
+                // Most recent season first: start from the current season and walk
+                // back 3 years (12 entries).
+                var now = DateTime.UtcNow;
                 var allSeasons = new[] { Season.Winter, Season.Spring, Season.Summer, Season.Fall };
-                for (var year = currentYear; year > currentYear - 3; year--)
+                var seasonIndex = now.Month <= 3 ? 0 : now.Month <= 6 ? 1 : now.Month <= 9 ? 2 : 3;
+                var year = now.Year;
+                for (var i = 0; i < 12; i++)
                 {
-                    foreach (var yearSeason in allSeasons)
+                    var season = allSeasons[seasonIndex];
+                    SeasonSelection.Add(new AnimeSeason
                     {
-                        SeasonSelection.Add(new AnimeSeason { Name = $"{yearSeason} {year}", Year = year, Season = yearSeason });
+                        Name = $"{season} {year}",
+                        Year = year,
+                        Season = season,
+                        IsCurrentSeason = i == 0
+                    });
+                    if (--seasonIndex < 0)
+                    {
+                        seasonIndex = 3;
+                        year--;
                     }
                 }
             }

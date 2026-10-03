@@ -81,6 +81,29 @@ namespace MALClient.XShared.Utils
             set => ApplicationDataService["SelectedTheme"] = value;
         }
 
+        /// <summary>
+        /// True when the user picked "follow system" as the theme.
+        /// </summary>
+        public static bool ThemeFollowsSystem => SelectedTheme == 2;
+
+        /// <summary>
+        /// Last observed system night mode, set by the Android app on startup.
+        /// Only consulted when <see cref="ThemeFollowsSystem"/> is true.
+        /// </summary>
+        public static bool SystemInDarkMode { get; set; }
+
+        /// <summary>
+        /// The actually applied theme: the explicit choice, or the system theme
+        /// when "follow system" is selected.
+        /// </summary>
+        public static bool IsDarkTheme =>
+            SelectedTheme == 1 || (ThemeFollowsSystem && SystemInDarkMode);
+
+        /// <summary>
+        /// <see cref="IsDarkTheme"/> as the 0/1 value the rest of the app expects.
+        /// </summary>
+        public static int EffectiveTheme => IsDarkTheme ? 1 : 0;
+
         public static bool DarkThemeAmoled
         {
             get => (bool)(ApplicationDataService[nameof(DarkThemeAmoled)] ?? false);
@@ -543,6 +566,16 @@ namespace MALClient.XShared.Utils
         {
             get => (bool)(ApplicationDataService["CalendarIncludePlanned"] ?? true);
             set => ApplicationDataService["CalendarIncludePlanned"] = value;
+        }
+
+        /// <summary>
+        /// When true the calendar shows anime currently airing in the current
+        /// season; when false it only shows the user's watching/plan-to-watch list.
+        /// </summary>
+        public static bool CalendarSeasonalView
+        {
+            get => (bool)(ApplicationDataService["CalendarSeasonalView"] ?? true);
+            set => ApplicationDataService["CalendarSeasonalView"] = value;
         }
 
         public static bool CalendarSwitchMonSun
