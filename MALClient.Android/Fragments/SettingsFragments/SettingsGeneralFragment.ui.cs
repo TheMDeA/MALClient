@@ -22,6 +22,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
         private RadioGroup _settingsPageGeneralStartPageRadioGroup;
         private RadioButton _settingsPageGeneralRadioDarkTheme;
         private RadioButton _settingsPageGeneralRadioLightTheme;
+        private RadioButton _settingsPageGeneralRadioSystemTheme;
         private RadioGroup _settingsPageGeneralThemeRadioGroup;
         private ImageButton _settingsPageGeneralColorOrange;
         private ImageButton _settingsPageGeneralColorPurple;
@@ -31,6 +32,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
         private ImageButton _settingsPageGeneralColorCyan;
         private ImageButton _settingsPageGeneralColorSkyBlue;
         private ImageButton _settingsPageGeneralColorRed;
+        private ImageButton _settingsPageGeneralColorMaterialYou;
         private Switch _settingsPageGeneralAmoledSwitch;
         private Button _settingsPageGeneralThemeChangeApply;
         private Switch _settingsPageGeneralEnableSwipeSwitch;
@@ -90,6 +92,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
         public RadioGroup SettingsPageGeneralStartPageRadioGroup => _settingsPageGeneralStartPageRadioGroup ?? (_settingsPageGeneralStartPageRadioGroup = FindViewById<RadioGroup>(Resource.Id.SettingsPageGeneralStartPageRadioGroup));
         public RadioButton SettingsPageGeneralRadioDarkTheme => _settingsPageGeneralRadioDarkTheme ?? (_settingsPageGeneralRadioDarkTheme = FindViewById<RadioButton>(Resource.Id.SettingsPageGeneralRadioDarkTheme));
         public RadioButton SettingsPageGeneralRadioLightTheme => _settingsPageGeneralRadioLightTheme ?? (_settingsPageGeneralRadioLightTheme = FindViewById<RadioButton>(Resource.Id.SettingsPageGeneralRadioLightTheme));
+        public RadioButton SettingsPageGeneralRadioSystemTheme => _settingsPageGeneralRadioSystemTheme ?? (_settingsPageGeneralRadioSystemTheme = FindViewById<RadioButton>(Resource.Id.SettingsPageGeneralRadioSystemTheme));
         public RadioGroup SettingsPageGeneralThemeRadioGroup => _settingsPageGeneralThemeRadioGroup ?? (_settingsPageGeneralThemeRadioGroup = FindViewById<RadioGroup>(Resource.Id.SettingsPageGeneralThemeRadioGroup));
         public ImageButton SettingsPageGeneralColorOrange => _settingsPageGeneralColorOrange ?? (_settingsPageGeneralColorOrange = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorOrange));
         public ImageButton SettingsPageGeneralColorPurple => _settingsPageGeneralColorPurple ?? (_settingsPageGeneralColorPurple = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorPurple));
@@ -99,6 +102,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
         public ImageButton SettingsPageGeneralColorCyan => _settingsPageGeneralColorCyan ?? (_settingsPageGeneralColorCyan = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorCyan));
         public ImageButton SettingsPageGeneralColorSkyBlue => _settingsPageGeneralColorSkyBlue ?? (_settingsPageGeneralColorSkyBlue = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorSkyBlue));
         public ImageButton SettingsPageGeneralColorRed => _settingsPageGeneralColorRed ?? (_settingsPageGeneralColorRed = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorRed));
+        public ImageButton SettingsPageGeneralColorMaterialYou => _settingsPageGeneralColorMaterialYou ?? (_settingsPageGeneralColorMaterialYou = FindViewById<ImageButton>(Resource.Id.SettingsPageGeneralColorMaterialYou));
         public Switch SettingsPageGeneralAmoledSwitch => _settingsPageGeneralAmoledSwitch ?? (_settingsPageGeneralAmoledSwitch = FindViewById<Switch>(Resource.Id.SettingsPageGeneralAmoledSwitch));
         public Button SettingsPageGeneralThemeChangeApply => _settingsPageGeneralThemeChangeApply ?? (_settingsPageGeneralThemeChangeApply = FindViewById<Button>(Resource.Id.SettingsPageGeneralThemeChangeApply));
         public Switch SettingsPageGeneralEnableSwipeSwitch => _settingsPageGeneralEnableSwipeSwitch ?? (_settingsPageGeneralEnableSwipeSwitch = FindViewById<Switch>(Resource.Id.SettingsPageGeneralEnableSwipeSwitch));

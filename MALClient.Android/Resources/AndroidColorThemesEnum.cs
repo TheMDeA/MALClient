@@ -22,7 +22,8 @@ namespace MALClient.Android.Resources
         Pink,
         Cyan,
         SkyBlue,
-        Red
+        Red,
+        MaterialYou
     }
 
     public static class AndroidColourThemeHelper

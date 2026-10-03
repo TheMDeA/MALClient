@@ -176,7 +176,7 @@ namespace MALClient.Android.Fragments
             var holder = new ComparisonViewHolder(view);
             _comparisonViewHolders.Add(view,holder);
 
-            if (Settings.SelectedTheme == 1)
+            if (Settings.IsDarkTheme)
             {
                 holder.ComparisonItemStatusSection.SetBackgroundResource(ResourceExtension.BrushFlyoutBackgroundRes);
                 holder.ComparisonItemTitleSection.SetBackgroundResource(ResourceExtension.BrushAnimeItemBackgroundRes);

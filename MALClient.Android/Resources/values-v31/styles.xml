@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material You (dynamic color): on Android 12+ the accents below resolve to the
+     system's wallpaper-derived palette. On older Android the values/styles.xml
+     fallback styles (fixed Orange accents) are used instead. -->
+<resources>
+  <style name="Theme.MALClient.Dark.MaterialYou" parent="Theme.MALClient.Dark">
+    <item name="AccentColour">@android:color/system_accent1_200</item>
+    <item name="AccentColourDark">@android:color/system_accent1_400</item>
+    <item name="AccentColourLight">@android:color/system_accent1_100</item>
+    <item name="OpaqueAccentColour">@android:color/system_accent1_500</item>
+    <item name="AccentColourContrast">@android:color/system_accent1_200</item>
+    <item name="BrushMessageBubbleMine">@android:color/system_accent2_700</item>
+    <item name="BrushMessageBubbleOther">@android:color/system_accent2_800</item>
+
+    <item name="android:colorPrimary">@android:color/system_accent1_200</item>
+    <item name="android:colorPrimaryDark">@color/Transparent</item>
+    <item name="android:colorAccent">@android:color/system_accent1_100</item>
+    <item name="android:colorControlActivated">@android:color/system_accent1_400</item>
+
+    <item name="colorPrimary">@android:color/system_accent1_200</item>
+    <item name="colorPrimaryDark">@color/Transparent</item>
+    <item name="colorAccent">@android:color/system_accent1_100</item>
+    <item name="colorControlActivated">@android:color/system_accent1_400</item>
+  </style>
+
+  <style name="Theme.MALClient.Light.MaterialYou" parent="Theme.MALClient.Light">
+    <item name="AccentColour">@android:color/system_accent1_600</item>
+    <item name="AccentColourDark">@android:color/system_accent1_700</item>
+    <item name="AccentColourLight">@android:color/system_accent1_400</item>
+    <item name="OpaqueAccentColour">@android:color/system_accent1_500</item>
+    <item name="AccentColourContrast">@android:color/system_accent1_700</item>
+    <item name="BrushMessageBubbleMine">@android:color/system_accent2_200</item>
+    <item name="BrushMessageBubbleOther">@android:color/system_accent2_100</item>
+
+    <item name="BrushAppBarUpper">@android:color/system_accent1_600</item>
+
+    <item name="android:colorPrimary">@android:color/system_accent1_600</item>
+    <item name="android:colorPrimaryDark">@android:color/system_accent1_700</item>
+    <item name="android:colorAccent">@android:color/system_accent1_400</item>
+    <item name="android:colorControlActivated">@android:color/system_accent1_700</item>
+
+    <item name="colorPrimary">@android:color/system_accent1_600</item>
+    <item name="colorPrimaryDark">@android:color/system_accent1_700</item>
+    <item name="colorAccent">@android:color/system_accent1_400</item>
+    <item name="colorControlActivated">@android:color/system_accent1_700</item>
+  </style>
+</resources>

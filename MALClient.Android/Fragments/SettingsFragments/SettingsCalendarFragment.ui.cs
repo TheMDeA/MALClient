@@ -14,8 +14,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
 {
     public partial class SettingsCalendarFragment
     {
-        private CheckBox _settingsPageCalendarBuildOptionsWatchingCheckBox;
-        private CheckBox _settingsPageCalendarBuildOptionsPlanToWatchCheckBox;
+        private Switch _settingsPageCalendarSeasonalViewSwitch;
         private RadioButton _settingsPageCalendarStartPageRadioSummary;
         private RadioButton _settingsPageCalendarStartPageRadioToday;
         private RadioGroup _settingsPageCalendarStartPageRadioGroup;
@@ -23,9 +22,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
         private Switch _settingsPageCalendarMiscRemoveEmptyDaysSwitch;
         //private Switch _settingsPageCalendarMiscExactAiringTimeSwitch;
 
-        public CheckBox SettingsPageCalendarBuildOptionsWatchingCheckBox => _settingsPageCalendarBuildOptionsWatchingCheckBox ?? (_settingsPageCalendarBuildOptionsWatchingCheckBox = FindViewById<CheckBox>(Resource.Id.SettingsPageCalendarBuildOptionsWatchingCheckBox));
-
-        public CheckBox SettingsPageCalendarBuildOptionsPlanToWatchCheckBox => _settingsPageCalendarBuildOptionsPlanToWatchCheckBox ?? (_settingsPageCalendarBuildOptionsPlanToWatchCheckBox = FindViewById<CheckBox>(Resource.Id.SettingsPageCalendarBuildOptionsPlanToWatchCheckBox));
+        public Switch SettingsPageCalendarSeasonalViewSwitch => _settingsPageCalendarSeasonalViewSwitch ?? (_settingsPageCalendarSeasonalViewSwitch = FindViewById<Switch>(Resource.Id.SettingsPageCalendarSeasonalViewSwitch));
 
         public RadioButton SettingsPageCalendarStartPageRadioSummary => _settingsPageCalendarStartPageRadioSummary ?? (_settingsPageCalendarStartPageRadioSummary = FindViewById<RadioButton>(Resource.Id.SettingsPageCalendarStartPageRadioSummary));
 

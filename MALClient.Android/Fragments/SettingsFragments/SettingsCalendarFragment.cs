@@ -33,13 +33,17 @@ namespace MALClient.Android.Fragments.SettingsFragments
 
         protected override void InitBindings()
         {
-            
-            Bindings.Add(
-                this.SetBinding(() => ViewModel.CalendarIncludeWatching,
-                    () => SettingsPageCalendarBuildOptionsWatchingCheckBox.Checked, BindingMode.TwoWay));
-            Bindings.Add(
-                this.SetBinding(() => ViewModel.CalendarIncludePlanned,
-                    () => SettingsPageCalendarBuildOptionsPlanToWatchCheckBox.Checked, BindingMode.TwoWay));
+            var seasonalViewInitialValue = ViewModel.CalendarSeasonalView;
+            var seasonalViewBinding = this.SetBinding(() => ViewModel.CalendarSeasonalView,
+                () => SettingsPageCalendarSeasonalViewSwitch.Checked, BindingMode.TwoWay);
+            seasonalViewBinding.WhenSourceChanges(() =>
+            {
+                // Rebuild in the background so the new content mode applies
+                // the next time the calendar page is opened.
+                if (ViewModel.CalendarSeasonalView != seasonalViewInitialValue)
+                    ViewModelLocator.CalendarPage.Init(true);
+            });
+            Bindings.Add(seasonalViewBinding);
             //
             SettingsPageCalendarStartPageRadioGroup.Check(Settings.CalendarStartOnToday
                 ? SettingsPageCalendarStartPageRadioToday.Id
