@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using HtmlAgilityPack;
 using MALClient.Models.Models.AnimeScrapped;
+using MALClient.XShared.JsonModels.MAL;
 using MALClient.XShared.Utils;
+using MALClient.XShared.ViewModels;
 
 namespace MALClient.XShared.Comm.Anime
 {
@@ -23,45 +24,93 @@ namespace MALClient.XShared.Comm.Anime
         Manga
     }
 
+    /// <summary>
+    /// Top-manga categories, mirroring the official MAL API v2 manga ranking types.
+    /// (Previously supplied by JikanDotNet; redefined locally after the official-API migration.)
+    /// </summary>
+    public enum MangaTopType
+    {
+        All,
+        Manga,
+        Novels,
+        Oneshots,
+        Doujin,
+        Manhwa,
+        Manhua,
+        ByPopularity,
+        Favorite
+    }
+
 
     public class AnimeTopQuery : Query
     {
-        private static Dictionary<TopAnimeType,List<TopAnimeData>> _prevQueriesCache = new Dictionary<TopAnimeType, List<TopAnimeData>>();
-        private TopAnimeType _type;
-        private int _page;
-        public AnimeTopQuery(TopAnimeType topType,int page = 0)
+        private static Dictionary<TopAnimeType, List<TopAnimeData>> _prevQueriesCache = new Dictionary<TopAnimeType, List<TopAnimeData>>();
+        private readonly TopAnimeType _type;
+        private readonly MangaTopType? _mangaTopType;
+        private readonly int _page;
+
+        public AnimeTopQuery(TopAnimeType topType, int page = 0)
         {
-            Request =
-                WebRequest.Create(
-                    Uri.EscapeUriString($"https://myanimelist.net/{GetEndpoint(topType,page)}"));
-            Request.ContentType = "application/x-www-form-urlencoded";
-            Request.Method = "GET";
             _page = page;
             _type = topType;
         }
 
-        private string GetEndpoint(TopAnimeType type,int page)
-        { 
+        public AnimeTopQuery(MangaTopType mangaTopType, int page = 0)
+        {
+            _page = page;
+            _type = TopAnimeType.Manga;
+            _mangaTopType = mangaTopType;
+        }
+
+        private static string GetRankingType(TopAnimeType type)
+        {
             switch (type)
             {
                 case TopAnimeType.General:
-                    return $"topanime.php?limit={page*50}";
+                    return "all";
                 case TopAnimeType.Airing:
-                    return $"topanime.php?type=airing&limit={page*50}";
+                    return "airing";
                 case TopAnimeType.Upcoming:
-                    return $"topanime.php?type=upcoming&limit={page*50}";
+                    return "upcoming";
                 case TopAnimeType.Tv:
-                    return $"topanime.php?type=tv&limit={page*50}";
+                    return "tv";
                 case TopAnimeType.Movies:
-                    return $"topanime.php?type=movie&limit={page*50}";
+                    return "movie";
                 case TopAnimeType.Ovas:
-                    return $"topanime.php?type=ova&limit={page*50}";
+                    return "ova";
                 case TopAnimeType.Popular:
-                    return $"topanime.php?type=bypopularity&limit={page*50}";
+                    return "bypopularity";
                 case TopAnimeType.Favourited:
-                    return $"topanime.php?type=favorite&limit={page*50}";
+                    return "favorite";
                 case TopAnimeType.Manga:
-                    return $"topmanga.php?limit={page*50}";
+                    return "manga";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        private static string GetMangaRankingType(MangaTopType type)
+        {
+            switch (type)
+            {
+                case MangaTopType.All:
+                    return "all";
+                case MangaTopType.Manga:
+                    return "manga";
+                case MangaTopType.Novels:
+                    return "novels";
+                case MangaTopType.Oneshots:
+                    return "oneshots";
+                case MangaTopType.Doujin:
+                    return "doujin";
+                case MangaTopType.Manhwa:
+                    return "manhwa";
+                case MangaTopType.Manhua:
+                    return "manhua";
+                case MangaTopType.ByPopularity:
+                    return "bypopularity";
+                case MangaTopType.Favorite:
+                    return "favorite";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -69,6 +118,9 @@ namespace MALClient.XShared.Comm.Anime
 
         public async Task<List<TopAnimeData>> GetTopAnimeData(bool force = false)
         {
+            if (_mangaTopType.HasValue)
+                return await GetTopMangaDataByType(force);
+
             if (!force)
                 if (_prevQueriesCache.ContainsKey(_type))
                     return _prevQueriesCache[_type];
@@ -79,68 +131,111 @@ namespace MALClient.XShared.Comm.Anime
                 _prevQueriesCache[_type] = output;
                 return output;
             }
-            var raw = await GetRequestResponse();
-            if (string.IsNullOrEmpty(raw))
-                return new List<TopAnimeData>();
 
-            var doc = new HtmlDocument();
-            doc.LoadHtml(raw);
-            var topNodes = doc.DocumentNode.Descendants("table").FirstOrDefault(node =>
-                node.Attributes.Contains("class") && node.Attributes["class"].Value == "top-ranking-table");
-
-            if(topNodes == null)
-                return new List<TopAnimeData>();
-
-            var i = 50*_page;
-            string imgUrlType = _type == TopAnimeType.Manga ? "manga/" : "anime/";
-            foreach (var item in topNodes.Descendants("tr").Where(node => node.Attributes.Contains("class") && node.Attributes["class"].Value == "ranking-list"))
+            try
             {
-                try
+                var client = await ResourceLocator.MalHttpContextProvider.GetApiHttpContextAsync();
+                var rankingType = GetRankingType(_type);
+                var offset = _page * 50;
+
+                if (_type == TopAnimeType.Manga)
                 {
-                    var current = new TopAnimeData();
-                    var epsText = item.Descendants("div").First(node => node.Attributes.Contains("class") && node.Attributes["class"].Value == "information di-ib mt4").ChildNodes[0].InnerText;
-                    epsText = epsText.Substring(epsText.IndexOf('(') + 1);
-                    epsText = epsText.Substring(0, epsText.IndexOf(' '));
-                    current.Episodes = epsText;
-                    //var img = item.Descendants("img").First().Attributes["data-src"].Value.Split('/');
-                    var img = item.Descendants("img").First().Attributes["data-srcset"].Value;
-                    img = img.Split(',').Last();
-                    img = img.Substring(0, img.Length - 3);
-                    var imgParts = img.Split('/');
-                    int imgCount = imgParts.Length;
-                    var imgurl = imgParts[imgCount - 2] + "/" + imgParts[imgCount - 1];
-                    var pos = imgurl.IndexOf('?');
-                    if (pos != -1)
-                        imgurl = imgurl.Substring(0, pos);
-                    current.ImgUrl = "https://cdn.myanimelist.net/images/" + imgUrlType + imgurl;
-                    var titleNode = item.Descendants("h3").First().Descendants("a").First();
-                        //.First(node => node.Attributes.Contains("class") && node.Attributes["class"].Value == (_type != TopAnimeType.Manga  ? "hoverinfo_trigger fl-l fs14 fw-b" : "hoverinfo_trigger fs14 fw-b"));
-                    current.Title = WebUtility.HtmlDecode(titleNode.InnerText).Trim();
-                    current.Id = Convert.ToInt32(titleNode.Attributes["href"].Value.Substring(8).Split('/')[2]);
-                    try
-                    {
-                        current.Score = float.Parse(item.Descendants("span").First(node => node.Attributes.Contains("class") && node.Attributes["class"].Value == "text on").InnerText.Trim());
-                    }
-                    catch (Exception)
-                    {
-                        current.Score = 0; //sometimes score in unavailable -> upcoming for example
-                    }
-                    
-                    current.Index = ++i;
+                    var apiUrl =
+                        $"https://api.myanimelist.net/v2/manga/ranking?ranking_type={rankingType}&limit=50&offset={offset}&nsfw=true&fields=id,title,main_picture,mean,num_volumes,num_chapters";
+                    var ranking =
+                        JsonSerializer.Deserialize<PaginatedMALResponse<ICollection<RankingEntry<MangaEntry>>>>(
+                            await client.GetStringAsync(apiUrl));
 
-
-                    output.Add(current);
+                    foreach (var entry in ranking.Data)
+                    {
+                        var node = entry.Node;
+                        output.Add(new TopAnimeData
+                        {
+                            Title = node.Title,
+                            Id = (int)node.MalId,
+                            ImgUrl = node.Picture?.Medium,
+                            Episodes = (node.Volumes ?? 0).ToString(),
+                            Score = (float)(node.Score ?? 0),
+                            Index = entry.Ranking?.Rank ?? 0
+                        });
+                    }
                 }
-                catch (Exception)
+                else
                 {
-                    //
+                    var apiUrl =
+                        $"https://api.myanimelist.net/v2/anime/ranking?ranking_type={rankingType}&limit=50&offset={offset}&nsfw=true&fields=id,title,main_picture,mean,num_episodes";
+                    var ranking =
+                        JsonSerializer.Deserialize<PaginatedMALResponse<ICollection<RankingEntry<AnimeEntry>>>>(
+                            await client.GetStringAsync(apiUrl));
+
+                    foreach (var entry in ranking.Data)
+                    {
+                        var node = entry.Node;
+                        output.Add(new TopAnimeData
+                        {
+                            Title = node.Title,
+                            Id = (int)node.MalId,
+                            ImgUrl = node.Picture?.Medium,
+                            Episodes = (node.Episodes ?? 0).ToString(),
+                            Score = (float)(node.Score ?? 0),
+                            Index = entry.Ranking?.Rank ?? 0
+                        });
+                    }
                 }
             }
-            if (_page != 0) //merge data
+            catch (Exception)
+            {
+                return new List<TopAnimeData>();
+            }
+
+            if (_page != 0 && _prevQueriesCache.ContainsKey(_type)) //merge data
                 output = _prevQueriesCache[_type].Union(output).Distinct().ToList();
 
             DataCache.SaveTopAnimeData(output, _type);
             _prevQueriesCache[_type] = output;
+            return output;
+        }
+
+        private async Task<List<TopAnimeData>> GetTopMangaDataByType(bool force = false)
+        {
+            var mangaType = _mangaTopType.Value;
+            var output = force
+                ? new List<TopAnimeData>()
+                : (await DataCache.RetrieveTopMangaData(mangaType) ?? new List<TopAnimeData>());
+            if (output.Count > 0)
+                return output;
+
+            try
+            {
+                var client = await ResourceLocator.MalHttpContextProvider.GetApiHttpContextAsync();
+                var rankingType = GetMangaRankingType(mangaType);
+                var offset = _page * 50;
+                var apiUrl =
+                    $"https://api.myanimelist.net/v2/manga/ranking?ranking_type={rankingType}&limit=50&offset={offset}&nsfw=true&fields=id,title,main_picture,mean,num_volumes,num_chapters";
+                var ranking =
+                    JsonSerializer.Deserialize<PaginatedMALResponse<ICollection<RankingEntry<MangaEntry>>>>(
+                        await client.GetStringAsync(apiUrl));
+
+                foreach (var entry in ranking.Data)
+                {
+                    var node = entry.Node;
+                    output.Add(new TopAnimeData
+                    {
+                        Title = node.Title,
+                        Id = (int)node.MalId,
+                        ImgUrl = node.Picture?.Medium,
+                        Episodes = (node.Volumes ?? 0).ToString(),
+                        Score = (float)(node.Score ?? 0),
+                        Index = entry.Ranking?.Rank ?? 0
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                return new List<TopAnimeData>();
+            }
+
+            DataCache.SaveTopMangaData(output, mangaType);
             return output;
         }
     }
