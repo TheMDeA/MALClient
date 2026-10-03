@@ -283,19 +283,20 @@ namespace MALClient.Android.Fragments.SettingsFragments
             SettingsPageGeneralColorCyan.Tag = (int)AndroidColorThemes.Cyan;
             SettingsPageGeneralColorSkyBlue.Tag = (int)AndroidColorThemes.SkyBlue;
             SettingsPageGeneralColorRed.Tag = (int)AndroidColorThemes.Red;
-            SettingsPageGeneralColorMaterialYou.Tag = (int)AndroidColorThemes.MaterialYou;
 
-            // Material You needs Android 12+; hide the option on older versions.
-            // Otherwise preview the actual wallpaper-derived accent on the button.
+            // Material You is a separate toggle (Android 12+), not a color template.
             if (Build.VERSION.SdkInt >= BuildVersionCodes.S)
             {
-                var dynamicAccent = MainActivity.CurrentContext.Resources.GetColor(
-                    global::Android.Resource.Color.SystemAccent1500, null);
-                SettingsPageGeneralColorMaterialYou.SetBackgroundColor(new Color(dynamicAccent));
+                Bindings.Add(
+                    this.SetBinding(() => ViewModel.MaterialYouEnabled,
+                        () => SettingsPageGeneralMaterialYouSwitch.Checked, BindingMode.TwoWay));
+                Bindings.Add(
+                    this.SetBinding(() => ViewModel.MaterialYouEnabled).WhenSourceChanges(UpdateColourSelection));
             }
             else
             {
-                SettingsPageGeneralColorMaterialYou.Visibility = ViewStates.Gone;
+                // Hide the whole Material You row (switch + label), not just the switch.
+                ((View)SettingsPageGeneralMaterialYouSwitch.Parent).Visibility = ViewStates.Gone;
             }
 
             var colorListener = new OnClickListener(view =>
@@ -312,7 +313,6 @@ namespace MALClient.Android.Fragments.SettingsFragments
             SettingsPageGeneralColorCyan.SetOnClickListener(colorListener);
             SettingsPageGeneralColorSkyBlue.SetOnClickListener(colorListener);
             SettingsPageGeneralColorRed.SetOnClickListener(colorListener);
-            SettingsPageGeneralColorMaterialYou.SetOnClickListener(colorListener);
 
             //SettingsPageGeneralPinAccentShortcutButton.SetOnClickListener(new OnClickListener(PinAccentShortcut));
         }
@@ -356,7 +356,6 @@ namespace MALClient.Android.Fragments.SettingsFragments
                     SettingsPageGeneralColorCyan,
                     SettingsPageGeneralColorSkyBlue,
                     SettingsPageGeneralColorRed,
-                    SettingsPageGeneralColorMaterialYou,
                 };
             }
             foreach (var accentButton in _accentButtons)
@@ -397,17 +396,16 @@ namespace MALClient.Android.Fragments.SettingsFragments
                     SettingsPageGeneralColorRed.SetImageResource(Resource.Drawable.icon_ok);
                     break;
 
-                case AndroidColorThemes.MaterialYou:
-                    SettingsPageGeneralColorMaterialYou.SetImageResource(Resource.Drawable.icon_ok);
-                    break;
-
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    // e.g. stale persisted values from removed options
+                    SettingsPageGeneralColorOrange.SetImageResource(Resource.Drawable.icon_ok);
+                    break;
             }
             SettingsPageGeneralThemeChangeApply.Visibility =
                 Converters.BoolToVisibility(Settings.EffectiveTheme != MainActivity.CurrentTheme ||
                                             AndroidColourThemeHelper.CurrentTheme != MainActivity.CurrentAccent ||
-                                            Settings.DarkThemeAmoled != MainActivity.IsAmoledApplied);
+                                            Settings.DarkThemeAmoled != MainActivity.IsAmoledApplied ||
+                                            Settings.MaterialYouEnabled != MainActivity.IsMaterialYouApplied);
         }
 
         #region TemplateDelegates

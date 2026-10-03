@@ -441,9 +441,13 @@ namespace MALClient.Android.Activities
 
         private void SetRightTheme()
         {
+            // Material You replaces the selected color template entirely (Android 12+).
+            var materialYou = AndroidColourThemeHelper.MaterialYouActive;
             if (Settings.IsDarkTheme)
             {
-                switch (AndroidColourThemeHelper.CurrentTheme)
+                if (materialYou)
+                    SetTheme(Resource.Style.Theme_MALClient_Dark_MaterialYou);
+                else switch (AndroidColourThemeHelper.CurrentTheme)
                 {
                     case AndroidColorThemes.Orange:
                         SetTheme(Resource.Style.Theme_MALClient_Dark_Orange);
@@ -469,11 +473,10 @@ namespace MALClient.Android.Activities
                     case AndroidColorThemes.Red:
                         SetTheme(Resource.Style.Theme_MALClient_Dark_Red);
                         break;
-                    case AndroidColorThemes.MaterialYou:
-                        SetTheme(Resource.Style.Theme_MALClient_Dark_MaterialYou);
-                        break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        // e.g. stale persisted values from removed options
+                        SetTheme(Resource.Style.Theme_MALClient_Dark_Orange);
+                        break;
                 }
                 if (Settings.DarkThemeAmoled)
                 {
@@ -487,7 +490,9 @@ namespace MALClient.Android.Activities
             }
             else
             {
-                switch (AndroidColourThemeHelper.CurrentTheme)
+                if (materialYou)
+                    SetTheme(Resource.Style.Theme_MALClient_Light_MaterialYou);
+                else switch (AndroidColourThemeHelper.CurrentTheme)
                 {
                     case AndroidColorThemes.Orange:
                         SetTheme(Resource.Style.Theme_MALClient_Light_Orange);
@@ -513,11 +518,10 @@ namespace MALClient.Android.Activities
                     case AndroidColorThemes.Red:
                         SetTheme(Resource.Style.Theme_MALClient_Light_Red);
                         break;
-                    case AndroidColorThemes.MaterialYou:
-                        SetTheme(Resource.Style.Theme_MALClient_Light_MaterialYou);
-                        break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        // e.g. stale persisted values from removed options
+                        SetTheme(Resource.Style.Theme_MALClient_Light_Orange);
+                        break;
                 }
             }
         }

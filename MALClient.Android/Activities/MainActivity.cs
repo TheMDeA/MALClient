@@ -65,6 +65,7 @@ namespace MALClient.Android.Activities
 
         public static MainActivity CurrentContext { get; private set; }
         public static bool IsAmoledApplied { get; private set; }
+        public static bool IsMaterialYouApplied { get; private set; }
         public static int CurrentTheme { get; private set; }
         public static AndroidColorThemes CurrentAccent { get; set; }
 
@@ -87,6 +88,7 @@ namespace MALClient.Android.Activities
             Settings.SystemInDarkMode = (Resources.Configuration.UiMode & UiMode.NightMask) == UiMode.NightYes;
             CurrentTheme = Settings.EffectiveTheme;
             CurrentAccent = AndroidColourThemeHelper.CurrentTheme;
+            IsMaterialYouApplied = AndroidColourThemeHelper.MaterialYouActive;
             SetRightTheme();
             ResourceExtension.Init();
             base.OnCreate(bundle);

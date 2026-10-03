@@ -33,17 +33,21 @@ namespace MALClient.Android.Fragments.SettingsFragments
 
         protected override void InitBindings()
         {
-            var seasonalViewInitialValue = ViewModel.CalendarSeasonalView;
-            var seasonalViewBinding = this.SetBinding(() => ViewModel.CalendarSeasonalView,
-                () => SettingsPageCalendarSeasonalViewSwitch.Checked, BindingMode.TwoWay);
-            seasonalViewBinding.WhenSourceChanges(() =>
+            Bindings.Add(
+                this.SetBinding(() => ViewModel.CalendarSeasonalView,
+                    () => SettingsPageCalendarSeasonalViewSwitch.Checked, BindingMode.TwoWay));
+            // Rebuild the calendar in the background when the user changes the
+            // content mode, so it applies the next time the page is opened.
+            // (WhenSourceChanges can't be used here: MVVM Light forbids it on a
+            // binding that already has a target expression.)
+            var lastBuiltSeasonalView = ViewModel.CalendarSeasonalView;
+            SettingsPageCalendarSeasonalViewSwitch.CheckedChange += (sender, args) =>
             {
-                // Rebuild in the background so the new content mode applies
-                // the next time the calendar page is opened.
-                if (ViewModel.CalendarSeasonalView != seasonalViewInitialValue)
-                    ViewModelLocator.CalendarPage.Init(true);
-            });
-            Bindings.Add(seasonalViewBinding);
+                if (args.IsChecked == lastBuiltSeasonalView)
+                    return; // programmatic set from the binding above
+                lastBuiltSeasonalView = args.IsChecked;
+                ViewModelLocator.CalendarPage.Init(true);
+            };
             //
             SettingsPageCalendarStartPageRadioGroup.Check(Settings.CalendarStartOnToday
                 ? SettingsPageCalendarStartPageRadioToday.Id

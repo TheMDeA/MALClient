@@ -60,6 +60,16 @@ namespace MALClient.Android.ViewModels
             }
         }
 
+        public bool MaterialYouEnabled
+        {
+            get { return Settings.MaterialYouEnabled; }
+            set
+            {
+                Settings.MaterialYouEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public override void LoadCachedEntries()
         {
         }

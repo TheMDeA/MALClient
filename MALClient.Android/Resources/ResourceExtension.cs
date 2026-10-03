@@ -216,34 +216,33 @@ namespace MALClient.Android.Resources
                     OpaqueAccentColour = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.RedOpaqueAccentColour, null);
                     break;
-                case AndroidColorThemes.MaterialYou:
-                    // Dynamic (wallpaper-derived) colors, Android 12+. On older versions
-                    // the option is hidden, but fall back to Orange if it was somehow set.
-                    if (Build.VERSION.SdkInt < BuildVersionCodes.S)
-                        goto case AndroidColorThemes.Orange;
-                    // Resolve the accents from the applied theme: on API 31+ the
-                    // values-v31 MaterialYou styles point them at the system palette.
-                    AccentColour = ResolveThemeColor(Resource.Attribute.AccentColour);
-                    AccentColourDark = ResolveThemeColor(Resource.Attribute.AccentColourDark);
-                    AccentColourContrast = ResolveThemeColor(Resource.Attribute.AccentColourContrast);
-                    OpaqueAccentColour = ResolveThemeColor(Resource.Attribute.OpaqueAccentColour);
-                    AccentColourHex = ColorToHex(AccentColour);
-                    AccentColourLightHex = ColorToHex(ResolveThemeColor(Resource.Attribute.AccentColourLight));
-                    AccentColourDarkHex = ColorToHex(AccentColourDark);
-                    if (Settings.IsDarkTheme)
-                    {
-                        AccentColourRes = global::Android.Resource.Color.SystemAccent1200;
-                        AccentColourDarkRes = global::Android.Resource.Color.SystemAccent1400;
-                    }
-                    else
-                    {
-                        AccentColourRes = global::Android.Resource.Color.SystemAccent1600;
-                        AccentColourDarkRes = global::Android.Resource.Color.SystemAccent1700;
-                    }
-                    OpaqueAccentColourRes = global::Android.Resource.Color.SystemAccent1500;
-                    break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    // e.g. stale persisted values from removed options
+                    goto case AndroidColorThemes.Orange;
+            }
+
+            // Material You toggle overrides the selected color template with the
+            // system's wallpaper-derived palette (Android 12+).
+            if (AndroidColourThemeHelper.MaterialYouActive)
+            {
+                AccentColour = ResolveThemeColor(Resource.Attribute.AccentColour);
+                AccentColourDark = ResolveThemeColor(Resource.Attribute.AccentColourDark);
+                AccentColourContrast = ResolveThemeColor(Resource.Attribute.AccentColourContrast);
+                OpaqueAccentColour = ResolveThemeColor(Resource.Attribute.OpaqueAccentColour);
+                AccentColourHex = ColorToHex(AccentColour);
+                AccentColourLightHex = ColorToHex(ResolveThemeColor(Resource.Attribute.AccentColourLight));
+                AccentColourDarkHex = ColorToHex(AccentColourDark);
+                if (Settings.IsDarkTheme)
+                {
+                    AccentColourRes = global::Android.Resource.Color.SystemAccent1200;
+                    AccentColourDarkRes = global::Android.Resource.Color.SystemAccent1400;
+                }
+                else
+                {
+                    AccentColourRes = global::Android.Resource.Color.SystemAccent1600;
+                    AccentColourDarkRes = global::Android.Resource.Color.SystemAccent1700;
+                }
+                OpaqueAccentColourRes = global::Android.Resource.Color.SystemAccent1500;
             }
 
             LowPriorityColour = new Color(ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
