@@ -156,6 +156,11 @@ namespace MALClient.XShared.ViewModels.Main
 
         public async Task Init(bool force = false)
         {
+            // Refresh the airing feed whenever the calendar is opened. The provider
+            // no-ops when the data is still current, and re-downloads when the
+            // in-memory copy went stale (e.g. app kept alive in background for days).
+            await ResourceLocator.AiringInfoProvider.Init(false);
+
             if (_initialized && !force)
             {
                 await GoToDesiredTab();

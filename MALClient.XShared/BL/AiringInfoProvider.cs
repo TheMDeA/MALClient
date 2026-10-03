@@ -45,7 +45,10 @@ namespace MALClient.XShared.BL
 
         public async Task Init(bool cacheOnly)
         {
-            if(_airingData != null)
+            // Refresh not only on first run: if the app stays alive in the background
+            // for days, the in-memory episode timestamps all end up in the past and
+            // the calendar shows wrong info ("Aired today!" on wrong days).
+            if (_airingData != null && !IsDataStale())
                 return;
 
             try
@@ -89,6 +92,20 @@ namespace MALClient.XShared.BL
             {
                 AiringShows = new List<AiringData>();
             }
+        }
+
+        /// <summary>
+        /// The airing feed is only useful while it still contains upcoming episodes.
+        /// If every episode of every show is in the past, the data is outdated and
+        /// must be re-downloaded (also covers the "previous download failed" case).
+        /// </summary>
+        private bool IsDataStale()
+        {
+            if (_airingData == null || !_airingData.Any())
+                return true;
+            var now = Utilities.ConvertToUnixTimestamp(DateTime.UtcNow);
+            return !_airingData.Any(data =>
+                data.Episodes != null && data.Episodes.Any(episode => episode.Timestamp >= now));
         }
 
         public bool TryGetCurrentEpisode(int id, out int episode, DateTime? forDay = null)

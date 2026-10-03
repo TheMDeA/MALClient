@@ -5,7 +5,25 @@ Branch based on `Drutol/MALClient` @ `37fb71f`. Every fix lands here first under
 
 ## [Unreleased]
 
-_(nothing pending)_
+### Fixed
+
+- Calendar airing data going stale: `AiringInfoProvider` previously loaded the
+  airing feed only once per app process, so if the app stayed alive in the
+  background for days the episode timestamps all ended up in the past and the
+  calendar showed wrong info (e.g. "Aired today!" on wrong days). The provider
+  now re-downloads when no show in the feed has an upcoming episode left, and
+  `CalendarPageViewModel` refreshes the feed every time the calendar is opened
+  (no-op while the data is still current).
+
+- Build fix: removed four dead `using AoLibs.Adapters.Core[_Interfaces];`
+  directives (`AnimeDetailsPageFragment`, `AnimeDetailsPageStaffTabFragment`,
+  `PersonDetailsPageProdTabFragment`, `PersonDetailsPageVaTabFragment`). The
+  vendored `AoLibsCompat.cs` only provides `AoLibs.Adapters.Android.Recycler`,
+  which is the only AoLibs namespace this code actually uses — the `Core`
+  usings referenced a namespace that no longer exists and broke the Release
+  build with CS0234.
+
+_(nothing else pending)_
 
 ## [2026-10-03] — 2026-10-03
 
