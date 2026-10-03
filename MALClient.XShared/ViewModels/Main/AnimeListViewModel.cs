@@ -958,11 +958,9 @@ namespace MALClient.XShared.ViewModels.Main
 
             Loading = true;
             EmptyNoticeVisibility = false;
-            var setDefaultSeason = false;
             if (CurrentSeason == null)
             {
                 CurrentSeason = new AnimeSeason {Name = "Airing" };
-                setDefaultSeason = true;
             }
             //get top or seasonal anime
             var data = new List<ISeasonalAnimeBaseData>();
@@ -1070,37 +1068,18 @@ namespace MALClient.XShared.ViewModels.Main
             if (WorkMode == AnimeListWorkModes.SeasonalAnime && SeasonSelection.Count == 0)
             {
                 SeasonSelection.Clear();
-                var i = 0;
-                var currSeasonIndex = -1;
-                try
+                // The season archive is deterministic calendar data: generate it locally
+                // instead of calling Jikan's /seasons endpoint. Jikan failures were
+                // swallowed by the catch below and left the dropdown blank.
+                // Order matches the old archive: newest year first, Winter -> Fall.
+                var currentYear = DateTime.UtcNow.Year;
+                var allSeasons = new[] { Season.Winter, Season.Spring, Season.Summer, Season.Fall };
+                for (var year = currentYear; year > currentYear - 3; year--)
                 {
-                    var seasons = await JikanClient.Jikan.GetSeasonArchiveAsync();
-
-                    foreach (var season in seasons.Data.Take(3))
+                    foreach (var yearSeason in allSeasons)
                     {
-                        foreach (var yearSeason in season.Season)
-                        {
-                            SeasonSelection.Add(new AnimeSeason { Name = $"{yearSeason} {season.Year}", Year = season.Year, Season = yearSeason});
-                            i++;
-                        }
-
-                        //if (seasonalUrl.Key == CurrentSeason.Name)
-                        //{
-                        //    _seasonalUrlsSelectedIndex = i - 1;
-                        //    RaisePropertyChanged(() => SeasonalUrlsSelectedIndex);
-                        //}
+                        SeasonSelection.Add(new AnimeSeason { Name = $"{yearSeason} {year}", Year = year, Season = yearSeason });
                     }
-                    //we have set artificial default one because we did not know what lays ahead of us
-                    if (setDefaultSeason && currSeasonIndex != -1)
-                    {
-                        CurrentSeason = SeasonSelection[currSeasonIndex];
-                        _seasonalUrlsSelectedIndex = currSeasonIndex;
-                        RaisePropertyChanged(() => SeasonalUrlsSelectedIndex);
-                    }
-                }
-                catch (Exception e)
-                {
-
                 }
             }
 
