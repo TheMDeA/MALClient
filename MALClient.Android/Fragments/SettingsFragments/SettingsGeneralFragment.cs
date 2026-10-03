@@ -290,7 +290,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
             if (Build.VERSION.SdkInt >= BuildVersionCodes.S)
             {
                 var dynamicAccent = MainActivity.CurrentContext.Resources.GetColor(
-                    Android.Resource.Color.SystemAccent1500, null);
+                    global::Android.Resource.Color.SystemAccent1500, null);
                 SettingsPageGeneralColorMaterialYou.SetBackgroundColor(new Color(dynamicAccent));
             }
             else

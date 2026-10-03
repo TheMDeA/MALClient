@@ -58,8 +58,13 @@ APK version: **1.5.15.0** (versionCode 171), package `com.dmda.malclient`.
 
 - Material You: added the missing `Resources\values-v31\styles.xml`
   `AndroidResource` entry to the Android csproj (explicit includes, not
-  wildcarded), and fixed `ResolveThemeColor` to resolve `reference`-type
-  theme attributes to real colors instead of reading the raw resource id.
+  wildcarded); fixed `ResolveThemeColor` to resolve `reference`-type
+  theme attributes to real colors instead of reading the raw resource id
+  (via `TypedValue.ResourceId`, since this Xamarin binding lacks the
+  `TypeFirstColorInt`/`TypeReference` constants); qualified framework
+  colors as `global::Android.Resource.Color.SystemAccent*` — inside the
+  `MALClient.Android.*` namespaces the unqualified name resolved to the
+  app's own `Resource` class (CS0117).
 
 _(nothing else pending)_
 

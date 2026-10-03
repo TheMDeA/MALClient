@@ -232,15 +232,15 @@ namespace MALClient.Android.Resources
                     AccentColourDarkHex = ColorToHex(AccentColourDark);
                     if (Settings.IsDarkTheme)
                     {
-                        AccentColourRes = Android.Resource.Color.SystemAccent1200;
-                        AccentColourDarkRes = Android.Resource.Color.SystemAccent1400;
+                        AccentColourRes = global::Android.Resource.Color.SystemAccent1200;
+                        AccentColourDarkRes = global::Android.Resource.Color.SystemAccent1400;
                     }
                     else
                     {
-                        AccentColourRes = Android.Resource.Color.SystemAccent1600;
-                        AccentColourDarkRes = Android.Resource.Color.SystemAccent1700;
+                        AccentColourRes = global::Android.Resource.Color.SystemAccent1600;
+                        AccentColourDarkRes = global::Android.Resource.Color.SystemAccent1700;
                     }
-                    OpaqueAccentColourRes = Android.Resource.Color.SystemAccent1500;
+                    OpaqueAccentColourRes = global::Android.Resource.Color.SystemAccent1500;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -263,10 +263,11 @@ namespace MALClient.Android.Resources
             var tv = new TypedValue();
             if (context.Theme.ResolveAttribute(attrRes, tv, true))
             {
-                if (tv.Type >= TypedValue.TypeFirstColorInt && tv.Type <= TypedValue.TypeLastColorInt)
-                    return tv.Data;
-                if (tv.Type == TypedValue.TypeReference)
+                // A reference-type attribute (e.g. @android:color/...) leaves the
+                // resolved resource id behind; a raw color int leaves ResourceId 0.
+                if (tv.ResourceId != 0)
                     return ResourcesCompat.GetColor(context.Resources, tv.ResourceId, context.Theme);
+                return tv.Data;
             }
             return Color.Transparent.ToArgb();
         }
