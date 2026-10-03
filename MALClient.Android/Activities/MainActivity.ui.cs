@@ -441,7 +441,7 @@ namespace MALClient.Android.Activities
 
         private void SetRightTheme()
         {
-            if (Settings.SelectedTheme == 1)
+            if (Settings.IsDarkTheme)
             {
                 switch (AndroidColourThemeHelper.CurrentTheme)
                 {
@@ -468,6 +468,9 @@ namespace MALClient.Android.Activities
                         break;
                     case AndroidColorThemes.Red:
                         SetTheme(Resource.Style.Theme_MALClient_Dark_Red);
+                        break;
+                    case AndroidColorThemes.MaterialYou:
+                        SetTheme(Resource.Style.Theme_MALClient_Dark_MaterialYou);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -509,6 +512,9 @@ namespace MALClient.Android.Activities
                         break;
                     case AndroidColorThemes.Red:
                         SetTheme(Resource.Style.Theme_MALClient_Light_Red);
+                        break;
+                    case AndroidColorThemes.MaterialYou:
+                        SetTheme(Resource.Style.Theme_MALClient_Light_MaterialYou);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

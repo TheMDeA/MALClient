@@ -242,7 +242,7 @@ namespace MALClient.Android.Activities
             _drawer = builder.Build();
 
             UpdateLogInLabel();
-            _drawer.StickyFooter.SetBackgroundColor(new Color(Settings.SelectedTheme == 1
+            _drawer.StickyFooter.SetBackgroundColor(new Color(Settings.IsDarkTheme
                 ? ResourceExtension.BrushAnimeItemInnerBackground
                 : ResourceExtension.BrushAnimeItemBackground));
 
@@ -346,7 +346,7 @@ namespace MALClient.Android.Activities
                 case HamburgerButtons.Settings:
                     if (_settingsHamburgerView != null)
                     {
-                        _settingsHamburgerView.SetBackgroundColor(Settings.SelectedTheme == 1
+                        _settingsHamburgerView.SetBackgroundColor(Settings.IsDarkTheme
                             ? new Color(ResourceExtension.BrushAnimeItemBackground)
                             : Color.White);
                         _settingsHamburgerView.FindViewById<TextView>(Resource.Id.HamburgerSettingsItemLabel).SetTextColor(new Color(ResourceExtension.AccentColour));
@@ -356,7 +356,7 @@ namespace MALClient.Android.Activities
                     _drawer.SetSelectionAtPosition(-1);
                     return;
                 case HamburgerButtons.Profile:
-                    _accountHamburgerView.SetBackgroundColor(Settings.SelectedTheme == 1
+                    _accountHamburgerView.SetBackgroundColor(Settings.IsDarkTheme
                         ? new Color(ResourceExtension.BrushAnimeItemBackground)
                         : Color.White);
                     _accountHamburgerView.FindViewById<TextView>(Resource.Id.HamburgerProfileItemLabel).SetTextColor(new Color(ResourceExtension.AccentColour));

@@ -23,7 +23,7 @@ namespace MALClient.Android.Resources
     {
         public static void Init()
         {
-            if (Settings.SelectedTheme == 1)
+            if (Settings.IsDarkTheme)
             {
                 BrushAnimeItemInnerBackground = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources, Resource.Color.DarkBrushAnimeItemInnerBackground, null);
                 BrushAnimeItemBackground = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources, Resource.Color.DarkBrushAnimeItemBackground, null);
@@ -77,7 +77,7 @@ namespace MALClient.Android.Resources
                         Resource.Color.OrangeAccentColour, null);
                     AccentColourDark = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.OrangeAccentColourDark, null);
-                    AccentColourContrast = Settings.SelectedTheme == 1 ? AccentColour : AccentColourDark;
+                    AccentColourContrast = Settings.IsDarkTheme ? AccentColour : AccentColourDark;
                     AccentColourHex =
                         MainActivity.CurrentContext.Resources.GetString(Resource.Color.OrangeAccentColour);
                     AccentColourLightHex =
@@ -95,7 +95,7 @@ namespace MALClient.Android.Resources
                         Resource.Color.PurpleAccentColour, null);
                     AccentColourDark = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.PurpleAccentColourDark, null);
-                    AccentColourContrast = Settings.SelectedTheme == 1 ? AccentColour : AccentColourDark;
+                    AccentColourContrast = Settings.IsDarkTheme ? AccentColour : AccentColourDark;
                     AccentColourHex =
                         MainActivity.CurrentContext.Resources.GetString(Resource.Color.PurpleAccentColour);
                     AccentColourLightHex =
@@ -113,7 +113,7 @@ namespace MALClient.Android.Resources
                         Resource.Color.BlueAccentColour, null);
                     AccentColourDark = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.BlueAccentColourDark, null);
-                    AccentColourContrast = Settings.SelectedTheme == 1 ? AccentColour : AccentColourDark;
+                    AccentColourContrast = Settings.IsDarkTheme ? AccentColour : AccentColourDark;
                     AccentColourHex =
                         MainActivity.CurrentContext.Resources.GetString(Resource.Color.BlueAccentColour);
                     AccentColourLightHex =
@@ -131,7 +131,7 @@ namespace MALClient.Android.Resources
                         Resource.Color.LimeAccentColour, null);
                     AccentColourDark = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.LimeAccentColourDark, null);
-                    AccentColourContrast = Settings.SelectedTheme == 1 ? AccentColour : AccentColourDark;
+                    AccentColourContrast = Settings.IsDarkTheme ? AccentColour : AccentColourDark;
                     AccentColourHex =
                         MainActivity.CurrentContext.Resources.GetString(Resource.Color.LimeAccentColour);
                     AccentColourLightHex =
@@ -149,7 +149,7 @@ namespace MALClient.Android.Resources
                         Resource.Color.PinkAccentColour, null);
                     AccentColourDark = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.PinkAccentColourDark, null);
-                    AccentColourContrast = Settings.SelectedTheme == 1 ? AccentColour : AccentColourDark;
+                    AccentColourContrast = Settings.IsDarkTheme ? AccentColour : AccentColourDark;
                     AccentColourHex =
                         MainActivity.CurrentContext.Resources.GetString(Resource.Color.PinkAccentColour);
                     AccentColourLightHex =
@@ -167,7 +167,7 @@ namespace MALClient.Android.Resources
                         Resource.Color.CyanAccentColour, null);
                     AccentColourDark = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.CyanAccentColourDark, null);
-                    AccentColourContrast = Settings.SelectedTheme == 1 ? AccentColour : AccentColourDark;
+                    AccentColourContrast = Settings.IsDarkTheme ? AccentColour : AccentColourDark;
                     AccentColourHex =
                         MainActivity.CurrentContext.Resources.GetString(Resource.Color.CyanAccentColour);
                     AccentColourLightHex =
@@ -185,7 +185,7 @@ namespace MALClient.Android.Resources
                         Resource.Color.SkyBlueAccentColour, null);
                     AccentColourDark = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.SkyBlueAccentColourDark, null);
-                    AccentColourContrast = Settings.SelectedTheme == 1 ? AccentColour : AccentColourDark;
+                    AccentColourContrast = Settings.IsDarkTheme ? AccentColour : AccentColourDark;
                     AccentColourHex =
                         MainActivity.CurrentContext.Resources.GetString(Resource.Color.SkyBlueAccentColour);
                     AccentColourLightHex =
@@ -203,7 +203,7 @@ namespace MALClient.Android.Resources
                         Resource.Color.RedAccentColour, null);
                     AccentColourDark = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.RedAccentColourDark, null);
-                    AccentColourContrast = Settings.SelectedTheme == 1 ? AccentColour : AccentColourDark;
+                    AccentColourContrast = Settings.IsDarkTheme ? AccentColour : AccentColourDark;
                     AccentColourHex =
                         MainActivity.CurrentContext.Resources.GetString(Resource.Color.RedAccentColour);
                     AccentColourLightHex =
@@ -216,6 +216,32 @@ namespace MALClient.Android.Resources
                     OpaqueAccentColour = ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                         Resource.Color.RedOpaqueAccentColour, null);
                     break;
+                case AndroidColorThemes.MaterialYou:
+                    // Dynamic (wallpaper-derived) colors, Android 12+. On older versions
+                    // the option is hidden, but fall back to Orange if it was somehow set.
+                    if (Build.VERSION.SdkInt < BuildVersionCodes.S)
+                        goto case AndroidColorThemes.Orange;
+                    // Resolve the accents from the applied theme: on API 31+ the
+                    // values-v31 MaterialYou styles point them at the system palette.
+                    AccentColour = ResolveThemeColor(Resource.Attribute.AccentColour);
+                    AccentColourDark = ResolveThemeColor(Resource.Attribute.AccentColourDark);
+                    AccentColourContrast = ResolveThemeColor(Resource.Attribute.AccentColourContrast);
+                    OpaqueAccentColour = ResolveThemeColor(Resource.Attribute.OpaqueAccentColour);
+                    AccentColourHex = ColorToHex(AccentColour);
+                    AccentColourLightHex = ColorToHex(ResolveThemeColor(Resource.Attribute.AccentColourLight));
+                    AccentColourDarkHex = ColorToHex(AccentColourDark);
+                    if (Settings.IsDarkTheme)
+                    {
+                        AccentColourRes = Android.Resource.Color.SystemAccent1200;
+                        AccentColourDarkRes = Android.Resource.Color.SystemAccent1400;
+                    }
+                    else
+                    {
+                        AccentColourRes = Android.Resource.Color.SystemAccent1600;
+                        AccentColourDarkRes = Android.Resource.Color.SystemAccent1700;
+                    }
+                    OpaqueAccentColourRes = Android.Resource.Color.SystemAccent1500;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -226,6 +252,29 @@ namespace MALClient.Android.Resources
                 Resource.Color.OnHoldColour, null));
             HighPriorityColour = new Color(ResourcesCompat.GetColor(MainActivity.CurrentContext.Resources,
                 Resource.Color.DroppedColour, null));
+        }
+
+        /// <summary>
+        /// Resolves a theme attribute (e.g. the MaterialYou accents) to its color int.
+        /// </summary>
+        private static int ResolveThemeColor(int attrRes)
+        {
+            var context = MainActivity.CurrentContext;
+            var tv = new TypedValue();
+            if (context.Theme.ResolveAttribute(attrRes, tv, true))
+            {
+                if (tv.Type >= TypedValue.TypeFirstColorInt && tv.Type <= TypedValue.TypeLastColorInt)
+                    return tv.Data;
+                if (tv.Type == TypedValue.TypeReference)
+                    return ResourcesCompat.GetColor(context.Resources, tv.ResourceId, context.Theme);
+            }
+            return Color.Transparent.ToArgb();
+        }
+
+        private static string ColorToHex(int color)
+        {
+            var hex = ((uint)color).ToString("X8");
+            return "#" + (hex.StartsWith("FF") ? hex.Substring(2) : hex);
         }
 
         #region Colours

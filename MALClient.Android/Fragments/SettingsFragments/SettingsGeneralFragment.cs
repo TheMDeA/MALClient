@@ -6,6 +6,7 @@ using System.Text;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
@@ -45,15 +46,18 @@ namespace MALClient.Android.Fragments.SettingsFragments
                 Settings.DefaultMenuTab = i == SettingsPageGeneralRadioAnimeList.Id ? "anime" : "manga";
             }));
             //
-            SettingsPageGeneralThemeRadioGroup.Check(Settings.SelectedTheme == 1
-                ? SettingsPageGeneralRadioDarkTheme.Id
-                : SettingsPageGeneralRadioLightTheme.Id);
+            SettingsPageGeneralThemeRadioGroup.Check(Settings.SelectedTheme == 2
+                ? SettingsPageGeneralRadioSystemTheme.Id
+                : Settings.SelectedTheme == 1
+                    ? SettingsPageGeneralRadioDarkTheme.Id
+                    : SettingsPageGeneralRadioLightTheme.Id);
 
             SettingsPageGeneralThemeRadioGroup.SetOnCheckedChangeListener(new OnCheckedListener(i =>
             {
-                Settings.SelectedTheme = i == SettingsPageGeneralRadioDarkTheme.Id ? 1 : 0;
+                Settings.SelectedTheme = i == SettingsPageGeneralRadioDarkTheme.Id ? 1 :
+                                         i == SettingsPageGeneralRadioSystemTheme.Id ? 2 : 0;
                 SettingsPageGeneralThemeChangeApply.Visibility =
-                    Converters.BoolToVisibility(Settings.SelectedTheme != MainActivity.CurrentTheme ||
+                    Converters.BoolToVisibility(Settings.EffectiveTheme != MainActivity.CurrentTheme ||
                                                 AndroidColourThemeHelper.CurrentTheme != MainActivity.CurrentAccent);
             }));
             SettingsPageGeneralThemeChangeApply.SetOnClickListener(new OnClickListener(view =>
@@ -279,6 +283,20 @@ namespace MALClient.Android.Fragments.SettingsFragments
             SettingsPageGeneralColorCyan.Tag = (int)AndroidColorThemes.Cyan;
             SettingsPageGeneralColorSkyBlue.Tag = (int)AndroidColorThemes.SkyBlue;
             SettingsPageGeneralColorRed.Tag = (int)AndroidColorThemes.Red;
+            SettingsPageGeneralColorMaterialYou.Tag = (int)AndroidColorThemes.MaterialYou;
+
+            // Material You needs Android 12+; hide the option on older versions.
+            // Otherwise preview the actual wallpaper-derived accent on the button.
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.S)
+            {
+                var dynamicAccent = MainActivity.CurrentContext.Resources.GetColor(
+                    Android.Resource.Color.SystemAccent1500, null);
+                SettingsPageGeneralColorMaterialYou.SetBackgroundColor(new Color(dynamicAccent));
+            }
+            else
+            {
+                SettingsPageGeneralColorMaterialYou.Visibility = ViewStates.Gone;
+            }
 
             var colorListener = new OnClickListener(view =>
             {
@@ -294,6 +312,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
             SettingsPageGeneralColorCyan.SetOnClickListener(colorListener);
             SettingsPageGeneralColorSkyBlue.SetOnClickListener(colorListener);
             SettingsPageGeneralColorRed.SetOnClickListener(colorListener);
+            SettingsPageGeneralColorMaterialYou.SetOnClickListener(colorListener);
 
             //SettingsPageGeneralPinAccentShortcutButton.SetOnClickListener(new OnClickListener(PinAccentShortcut));
         }
@@ -337,6 +356,7 @@ namespace MALClient.Android.Fragments.SettingsFragments
                     SettingsPageGeneralColorCyan,
                     SettingsPageGeneralColorSkyBlue,
                     SettingsPageGeneralColorRed,
+                    SettingsPageGeneralColorMaterialYou,
                 };
             }
             foreach (var accentButton in _accentButtons)
@@ -377,11 +397,15 @@ namespace MALClient.Android.Fragments.SettingsFragments
                     SettingsPageGeneralColorRed.SetImageResource(Resource.Drawable.icon_ok);
                     break;
 
+                case AndroidColorThemes.MaterialYou:
+                    SettingsPageGeneralColorMaterialYou.SetImageResource(Resource.Drawable.icon_ok);
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             SettingsPageGeneralThemeChangeApply.Visibility =
-                Converters.BoolToVisibility(Settings.SelectedTheme != MainActivity.CurrentTheme ||
+                Converters.BoolToVisibility(Settings.EffectiveTheme != MainActivity.CurrentTheme ||
                                             AndroidColourThemeHelper.CurrentTheme != MainActivity.CurrentAccent ||
                                             Settings.DarkThemeAmoled != MainActivity.IsAmoledApplied);
         }
