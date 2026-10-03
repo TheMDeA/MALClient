@@ -269,47 +269,50 @@ jobs:
           if-no-files-found: error
 
   release:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+  if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+  needs: build
+  runs-on: ubuntu-latest
+  permissions:
+    contents: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Verify versionName matches tag
-        shell: bash
-        run: |
-          versionName=$(grep -oP 'android:versionName="\K[^"]+' MALClient.Android/Properties/AndroidManifest.xml)
-          tag="${GITHUB_REF_NAME#v}"
-          echo "versionName=$versionName tag=$tag"
-          if [ -z "$versionName" ]; then
-            echo "::error::Could not read android:versionName from AndroidManifest.xml"
-            exit 1
-          fi
-          if [ "$versionName" != "$tag" ]; then
-            echo "::error::versionName ($versionName) does not match release tag ($tag). Bump the manifest (versionName + versionCode) and commit before tagging."
-            exit 1
-          fi
+    - name: Verify versionName matches tag
+      if: startsWith(github.ref, 'refs/tags/v')
+      shell: bash
+      run: |
+        versionName=$(grep -oP 'android:versionName="\K[^"]+' MALClient.Android/Properties/AndroidManifest.xml)
+        tag="${GITHUB_REF_NAME#v}"
+        echo "versionName=$versionName tag=$tag"
+        if [ -z "$versionName" ]; then
+          echo "::error::Could not read android:versionName from AndroidManifest.xml"
+          exit 1
+        fi
+        if [ "$versionName" != "$tag" ]; then
+          echo "::error::versionName ($versionName) does not match release tag ($tag). Bump the manifest (versionName + versionCode) and commit before tagging."
+          exit 1
+        fi
 
-      - name: Download APK artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: MALClient-Android-Release
+    - name: Download APK artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: MALClient-Android-Release
 
-      - name: Ensure release notes exist
-        shell: bash
-        run: |
-          if [ ! -f RELEASE_NOTES.md ]; then
-            printf '# MALClient %s\n' "${GITHUB_REF_NAME}" > RELEASE_NOTES.md
-          fi
+    - name: Ensure release notes exist
+      shell: bash
+      run: |
+        if [ ! -f RELEASE_NOTES.md ]; then
+          printf '# MALClient %s\n' "${GITHUB_REF_NAME}" > RELEASE_NOTES.md
+        fi
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: MALClient ${{ github.ref_name }}
-          body_path: RELEASE_NOTES.md
-          files: |
-            **/*.apk
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        name: MALClient ${{ github.ref_name }}
+        tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'android-latest' }}
+        prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        body_path: RELEASE_NOTES.md
+        files: |
+          **/*.apk
