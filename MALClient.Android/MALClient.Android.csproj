@@ -96,6 +96,7 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AoLibsCompat.cs" />
     <Compile Include="Activities\MainActivity.ads.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Activities\MainActivity.hamburger.cs" />
@@ -323,12 +324,6 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AoLibs.Adapters.Android">
-      <Version>0.6.3</Version>
-    </PackageReference>
-    <PackageReference Include="AoLibs.Adapters.Core">
-      <Version>0.6.3</Version>
-    </PackageReference>
     <PackageReference Include="FastAdapter.Xamarin.Droid">
       <Version>1.6.0.2</Version>
     </PackageReference>
