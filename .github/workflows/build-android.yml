@@ -24,6 +24,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build fixed JikanDotNet package from source
+        shell: pwsh
+        run: |
+          # The fixed JikanDotNet (HTTP/1.1 + Accept-Encoding workaround) is not on
+          # nuget.org yet, so build it from the public fork.
+          git clone --depth 1 --branch malclient-temp-package https://github.com/stefan9999991/jikan.net.git "$env:RUNNER_TEMP\jikan.net"
+          New-Item -ItemType Directory -Path "$env:GITHUB_WORKSPACE\local-packages" -Force | Out-Null
+          dotnet pack "$env:RUNNER_TEMP\jikan.net\JikanDotNet\JikanDotNet.csproj" -c Release -p:TargetFrameworks=netstandard2.0 -o "$env:GITHUB_WORKSPACE\local-packages"
+          Get-ChildItem "$env:GITHUB_WORKSPACE\local-packages"
+
+      - name: Create nuget.config with local package source
+        shell: pwsh
+        run: |
+          $config = @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <packageSources>
+              <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+              <add key="local-fixed-packages" value="$env:GITHUB_WORKSPACE\local-packages" />
+            </packageSources>
+          </configuration>
+          "@
+          Set-Content -Path "$env:GITHUB_WORKSPACE\nuget.config" -Value $config -Encoding utf8
+          Write-Host "nuget.config written"
+
       - name: Cache NuGet packages
         id: cache-nuget
         uses: actions/cache@v4
@@ -268,6 +298,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: MALClient-Android-Release
+
+      - name: Ensure release notes exist
+        shell: bash
+        run: |
+          if [ ! -f RELEASE_NOTES.md ]; then
+            printf '# MALClient %s\n' "${GITHUB_REF_NAME}" > RELEASE_NOTES.md
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
