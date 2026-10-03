@@ -267,7 +267,7 @@ jobs:
           name: MALClient-Android-aab
           path: ${{ steps.apk.outputs.aab_path }}
           if-no-files-found: error
-
+          
  release:
   if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
   needs: build
