@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using MALClient.Adapters;
 using MALClient.Models.Enums;
+using MALClient.Models.Models.Anime;
 using MALClient.XShared.Comm;
 using MALClient.XShared.Comm.Anime;
 using MALClient.XShared.Delegates;
@@ -170,26 +171,90 @@ namespace MALClient.XShared.ViewModels.Main
             InitPages();
             _initialized = true;
 
-            var abstractions = _animeLibraryDataStorage.AllLoadedAuthAnimeItems.Where(abstraction =>
-                ResourceLocator.AiringInfoProvider.HasAiringEntry(abstraction.Id)).Where(
-                abstraction => abstraction.Type == (int)AnimeType.TV && (
-                    (Settings.CalendarIncludePlanned &&
-                     abstraction.MyStatus == AnimeStatus.PlanToWatch) ||
-                    (Settings.CalendarIncludeWatching && abstraction.MyStatus == AnimeStatus.Watching))).ToList();
-            
-            //Limit items to 40 at most
-            if (abstractions.Count() > 40)
+            var abstractions = new List<AnimeItemAbstraction>();
+            if (Settings.CalendarSeasonalView)
             {
-                var watchingCount = abstractions.Count(abstraction => abstraction.MyStatus == AnimeStatus.Watching);
-                //with currently watched ones having most priority
-                if (watchingCount > 40)
-                    abstractions = abstractions.Where(abstraction => abstraction.MyStatus == AnimeStatus.Watching).Take(40).ToList();
-                else
+                // The calendar shows anime currently airing in the current season,
+                // not just the user's list. Entries already in the user's library
+                // reuse their abstraction so status/progress keep showing.
+                var now = DateTime.UtcNow;
+                var currentSeason = new AnimeSeason
                 {
-                    //take all watching and add ptw to make at most 40 entries
-                    abstractions = abstractions.Where(abstraction => abstraction.MyStatus == AnimeStatus.Watching)
-                        .Concat(abstractions.Where(abstraction => abstraction.MyStatus == AnimeStatus.PlanToWatch)
-                            .Take(40 - watchingCount)).ToList();
+                    Year = now.Year,
+                    Season = now.Month <= 3 ? JikanDotNet.Season.Winter :
+                        now.Month <= 6 ? JikanDotNet.Season.Spring :
+                        now.Month <= 9 ? JikanDotNet.Season.Summer : JikanDotNet.Season.Fall,
+                };
+                currentSeason.Name = $"{currentSeason.Season} {currentSeason.Year}";
+
+                var seasonData = await new AnimeSeasonalQuery(currentSeason).GetSeasonalAnime();
+                var libraryItems = _animeLibraryDataStorage.AllLoadedAuthAnimeItems.ToList();
+                foreach (var animeData in seasonData)
+                {
+                    try
+                    {
+                        if (!ResourceLocator.AiringInfoProvider.HasAiringEntry(animeData.Id))
+                            continue;
+                        if (Settings.SelectedApiType == ApiType.Mal)
+                            // seasonal entries carry MAL score/genres, same as the seasonal page
+                            DataCache.RegisterVolatileData(animeData.Id, new VolatileDataCache
+                            {
+                                DayOfAiring = animeData.AirDay,
+                                GlobalScore = animeData.Score,
+                                Genres = animeData.Genres,
+                                AirStartDate = animeData.AirStartDate == AnimeItemViewModel.InvalidStartEndDate
+                                    ? null
+                                    : animeData.AirStartDate
+                            });
+                        var abstraction = Settings.SelectedApiType == ApiType.Mal
+                            ? libraryItems.FirstOrDefault(item => item.Id == animeData.Id)
+                            : libraryItems.FirstOrDefault(item => item.MalId == animeData.Id);
+                        abstraction = abstraction ?? new AnimeItemAbstraction(animeData, true);
+                        abstraction.ViewModel.UpdateWithSeasonData(animeData, true);
+                        abstractions.Add(abstraction);
+                    }
+                    catch (Exception)
+                    {
+                        // ignore odd entries
+                    }
+                }
+
+                //Limit items to 40 at most, user's own list entries first.
+                if (abstractions.Count > 40)
+                {
+                    var libraryAbstractions = abstractions.Where(abstraction => abstraction.Auth).ToList();
+                    if (libraryAbstractions.Count > 40)
+                        abstractions = libraryAbstractions.Take(40).ToList();
+                    else
+                        abstractions = libraryAbstractions
+                            .Concat(abstractions.Where(abstraction => !abstraction.Auth)
+                                .Take(40 - libraryAbstractions.Count)).ToList();
+                }
+            }
+            else
+            {
+                // Watchlist-only view: TV anime from the user's list that have
+                // airing entries, watching and plan-to-watch.
+                abstractions = _animeLibraryDataStorage.AllLoadedAuthAnimeItems.Where(abstraction =>
+                    ResourceLocator.AiringInfoProvider.HasAiringEntry(abstraction.Id)).Where(
+                    abstraction => abstraction.Type == (int)AnimeType.TV && (
+                        abstraction.MyStatus == AnimeStatus.PlanToWatch ||
+                        abstraction.MyStatus == AnimeStatus.Watching)).ToList();
+
+                //Limit items to 40 at most
+                if (abstractions.Count > 40)
+                {
+                    var watchingCount = abstractions.Count(abstraction => abstraction.MyStatus == AnimeStatus.Watching);
+                    //with currently watched ones having most priority
+                    if (watchingCount > 40)
+                        abstractions = abstractions.Where(abstraction => abstraction.MyStatus == AnimeStatus.Watching).Take(40).ToList();
+                    else
+                    {
+                        //take all watching and add ptw to make at most 40 entries
+                        abstractions = abstractions.Where(abstraction => abstraction.MyStatus == AnimeStatus.Watching)
+                            .Concat(abstractions.Where(abstraction => abstraction.MyStatus == AnimeStatus.PlanToWatch)
+                                .Take(40 - watchingCount)).ToList();
+                    }
                 }
             }
 

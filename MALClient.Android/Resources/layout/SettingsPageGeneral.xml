@@ -89,6 +89,14 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Light theme" />
+
+        <RadioButton
+            android:id="@+id/SettingsPageGeneralRadioSystemTheme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Follow system" />
       </RadioGroup>
 
       <LinearLayout
@@ -177,6 +185,15 @@
               android:layout_height="40dp"
               android:layout_marginStart="10dp"
               android:background="@color/RedAccentColour"
+              android:src="@drawable/icon_ok"
+              android:tint="#fff" />
+
+          <ImageButton
+              android:id="@+id/SettingsPageGeneralColorMaterialYou"
+              android:layout_width="40dp"
+              android:layout_height="40dp"
+              android:layout_marginStart="10dp"
+              android:background="#888888"
               android:src="@drawable/icon_ok"
               android:tint="#fff" />
         </LinearLayout>

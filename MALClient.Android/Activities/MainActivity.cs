@@ -7,6 +7,7 @@ using Android;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Content.Res;
 using Android.OS;
 using Android.Support.V4.Content;
 using Android.Support.V7.App;
@@ -83,7 +84,8 @@ namespace MALClient.Android.Activities
         protected override async void OnCreate(Bundle bundle)
         {
             RequestWindowFeature(WindowFeatures.NoTitle);
-            CurrentTheme = Settings.SelectedTheme;
+            Settings.SystemInDarkMode = (Resources.Configuration.UiMode & UiMode.NightMask) == UiMode.NightYes;
+            CurrentTheme = Settings.EffectiveTheme;
             CurrentAccent = AndroidColourThemeHelper.CurrentTheme;
             SetRightTheme();
             ResourceExtension.Init();

@@ -381,6 +381,12 @@ namespace MALClient.XShared.ViewModels
             set => Settings.CalendarIncludePlanned = value;
         }
 
+        public bool CalendarSeasonalView
+        {
+            get => Settings.CalendarSeasonalView;
+            set => Settings.CalendarSeasonalView = value;
+        }
+
         public bool IsCachingEnabled
         {
             get => Settings.IsCachingEnabled;
