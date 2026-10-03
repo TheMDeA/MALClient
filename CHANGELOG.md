@@ -9,6 +9,8 @@ _(nothing else pending)_
 
 ## [2026-10-03] — feature push (calendar seasonal view, follow-system theme, Material You)
 
+APK version: **1.5.15.0** (versionCode 171), package `com.dmda.malclient`.
+
 ### Changed
 
 - Calendar page: new "Show current season airing anime" toggle in
