@@ -51,39 +51,39 @@ namespace MALClient.XShared.Utils
                 .Replace("AccentColourLight", AccentColourLight)
                 .Replace("AccentColourDark", AccentColourDark)
                 .Replace("BodyBackgroundThemeColor",
-                    Settings.SelectedTheme == 1 ? "#2d2d2d" : "#e6e6e6")
+                    Settings.IsDarkTheme ? "#2d2d2d" : "#e6e6e6")
                 .Replace("BodyForegroundThemeColor",
-                    Settings.SelectedTheme == 1 ? "white" : "black")
+                    Settings.IsDarkTheme ? "white" : "black")
                 .Replace(
                     "HorizontalSeparatorColor",
-                    Settings.SelectedTheme == 1 ? "#0d0d0d" : "#b3b3b3")
+                    Settings.IsDarkTheme ? "#0d0d0d" : "#b3b3b3")
                 .Replace("BodyBackgroundThemeDarkerColor",
-                    Settings.SelectedTheme == 1 ? "#212121" : "#dadada")
+                    Settings.IsDarkTheme ? "#212121" : "#dadada")
                 .Replace("ShadowDefinition", ShadowsDefinition);
 
             bodyCss = bodyCss.Replace("AccentColourBase", AccentColour).
                 Replace("AccentColourLight", AccentColourLight).
                 Replace("AccentColourDark", AccentColourDark)
                 .Replace("BodyBackgroundThemeColor",
-                    Settings.SelectedTheme == 1 ? "#2d2d2d" : "#e6e6e6")
+                    Settings.IsDarkTheme ? "#2d2d2d" : "#e6e6e6")
                 .Replace("BodyForegroundThemeColor",
-                    Settings.SelectedTheme == 1 ? "white" : "black").Replace(
+                    Settings.IsDarkTheme ? "white" : "black").Replace(
                     "HorizontalSeparatorColor",
-                    Settings.SelectedTheme == 1 ? "#0d0d0d" : "#b3b3b3")
+                    Settings.IsDarkTheme ? "#0d0d0d" : "#b3b3b3")
                 .Replace("BodyBackgroundThemeDarkerColor",
-                    Settings.SelectedTheme == 1 ? "#212121" : "#dadada");
+                    Settings.IsDarkTheme ? "#212121" : "#dadada");
 
             bodyCssMinWidth = bodyCssMinWidth.Replace("AccentColourBase", AccentColour).
                 Replace("AccentColourLight", AccentColourLight).
                 Replace("AccentColourDark", AccentColourDark)
                 .Replace("BodyBackgroundThemeColor",
-                    Settings.SelectedTheme == 1 ? "#2d2d2d" : "#e6e6e6")
+                    Settings.IsDarkTheme ? "#2d2d2d" : "#e6e6e6")
                 .Replace("BodyForegroundThemeColor",
-                    Settings.SelectedTheme == 1 ? "white" : "black").Replace(
+                    Settings.IsDarkTheme ? "white" : "black").Replace(
                     "HorizontalSeparatorColor",
-                    Settings.SelectedTheme == 1 ? "#0d0d0d" : "#b3b3b3")
+                    Settings.IsDarkTheme ? "#0d0d0d" : "#b3b3b3")
                 .Replace("BodyBackgroundThemeDarkerColor",
-                    Settings.SelectedTheme == 1 ? "#212121" : "#dadada");
+                    Settings.IsDarkTheme ? "#212121" : "#dadada");
 
             ReplacedBegin = Begin.Replace("$notifyFunction$", NotifyFunction);
             ReplacedCssHtmlBodyScrollEnabled = bodyCss;

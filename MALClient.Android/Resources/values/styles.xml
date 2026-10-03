@@ -197,6 +197,11 @@
     <item name="colorControlActivated">@color/RedAccentColourDark</item>
   </style>
 
+  <!-- Material You: on API 31+ the values-v31 version of this style replaces
+       the accents below with the system's wallpaper-derived dynamic colors.
+       This fallback (inheriting a fixed accent) is used on older Android. -->
+  <style name="Theme.MALClient.Dark.MaterialYou" parent="Theme.MALClient.Dark.Orange" />
+
   <style name="Theme.MALClient.Light.Orange" parent="Theme.MALClient.Light">
     <item name="AccentColour">@color/OrangeAccentColour</item>
     <item name="AccentColourDark">@color/OrangeAccentColourDark</item>
@@ -372,6 +377,9 @@
     <item name="colorAccent">@color/RedAccentColourLight</item>
     <item name="colorControlActivated">@color/RedAccentColourDark</item>
   </style>
+
+  <!-- See the Dark.MaterialYou comment above: values-v31 overrides this one. -->
+  <style name="Theme.MALClient.Light.MaterialYou" parent="Theme.MALClient.Light.Orange" />
 
 
 
