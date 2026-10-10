@@ -2,6 +2,7 @@ using Android.Content.Res;
 using Android.Graphics;
 using Android.Support.Design.Widget;
 using Android.Support.V4.Content;
+using Android.Views;
 using MALClient.Android.Resources;
 using MALClient.Models.Enums;
 using MALClient.XShared.ViewModels;
@@ -42,10 +43,30 @@ namespace MALClient.Android.Activities
             _bottomNav.ItemIconTintList = tint;
             _bottomNav.ItemTextColor = tint;
 
-            _bottomNav.NavigationItemSelected += OnBottomNavItemSelected;
+            _bottomNav.SetOnNavigationItemSelectedListener(new BottomNavListener(this));
 
             ViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
             SyncBottomNavSelection();
+        }
+
+        /// <summary>
+        /// Listener instead of the NavigationItemSelected event: the event's
+        /// nested NavigationItemSelectedEventArgs type breaks the Mono linker
+        /// (XALNK7000 resolution failure), the interface does not.
+        /// </summary>
+        private class BottomNavListener : Java.Lang.Object, BottomNavigationView.IOnNavigationItemSelectedListener
+        {
+            private readonly MainActivity _activity;
+
+            public BottomNavListener(MainActivity activity)
+            {
+                _activity = activity;
+            }
+
+            public bool OnNavigationItemSelected(IMenuItem item)
+            {
+                return _activity.OnBottomNavItemSelected(item.ItemId);
+            }
         }
 
         private void OnMainViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -54,17 +75,17 @@ namespace MALClient.Android.Activities
                 SyncBottomNavSelection();
         }
 
-        private void OnBottomNavItemSelected(object sender, BottomNavigationView.NavigationItemSelectedEventArgs e)
+        private bool OnBottomNavItemSelected(int itemId)
         {
             if (_bottomNavSyncing)
-                return;
-            var target = BottomNavTarget(e.Item.ItemId);
+                return true;
+            var target = BottomNavTarget(itemId);
             if (target == null)
-                return;
+                return false;
             if (ViewModel.CurrentMainPage == target.Value)
-                return; // already there
+                return true; // already there
             ViewModel.Navigate(target.Value);
-            e.Handled = true;
+            return true;
         }
 
         private PageIndex? BottomNavTarget(int itemId)
