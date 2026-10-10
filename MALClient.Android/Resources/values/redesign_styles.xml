@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Redesign styles: editorial cards + typography built on the existing
+       ?Brush* theme attributes (light/dark aware). -->
+
+  <style name="RedesignCard">
+    <item name="android:background">@drawable/redesign_card_background</item>
+  </style>
+
+  <style name="RedesignHeadline">
+    <item name="android:textSize">22sp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:textColor">?BrushText</item>
+    <item name="android:fontFamily">sans-serif</item>
+  </style>
+
+  <style name="RedesignSectionTitle">
+    <item name="android:textSize">17sp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:textColor">?BrushText</item>
+  </style>
+
+  <style name="RedesignBody">
+    <item name="android:textSize">14sp</item>
+    <item name="android:textColor">?BrushText</item>
+  </style>
+
+  <style name="RedesignCaption">
+    <item name="android:textSize">12sp</item>
+    <item name="android:textColor">?BrushSettingsSubtitle</item>
+  </style>
+
+  <style name="RedesignAccentButton" parent="AccentButtonStyle">
+    <item name="android:background">@color/RedesignAccent</item>
+    <item name="android:textColor">@color/RedesignOnAccent</item>
+  </style>
+</resources>

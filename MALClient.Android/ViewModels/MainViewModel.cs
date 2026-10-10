@@ -368,6 +368,12 @@ namespace MALClient.Android.ViewModels
                     CurrentStatus = "Club details";
                     MainNavigationRequested?.Invoke(new ClubDetailsPageFragment(args as ClubDetailsPageNavArgs));
                     break;
+                case PageIndex.PageHome:
+                    HideSearchStuff();
+                    RefreshButtonVisibility = false;
+                    CurrentStatus = "Home";
+                    MainNavigationRequested?.Invoke(new HomePageFragment());
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
@@ -411,7 +417,7 @@ namespace MALClient.Android.ViewModels
             if (Credentials.Authenticated)
             {
                 if (hasArgumentsWithSync)
-                    Navigate(Settings.DefaultMenuTab == "anime" ? PageIndex.PageAnimeList : PageIndex.PageMangaList);
+                    Navigate(PageIndex.PageHome);
                 //entry point whatnot
                 else if (InitDetailsFull != null)
                 {

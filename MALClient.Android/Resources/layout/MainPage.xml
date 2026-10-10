@@ -100,6 +100,14 @@
 
       </FrameLayout>
 
+      <android.support.design.widget.BottomNavigationView
+        android:id="@+id/MainPageBottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?BrushAppBars"
+        app:menu="@menu/bottom_nav_menu"
+        app:labelVisibilityMode="labeled" />
+
       <com.google.android.gms.ads.AdView
         android:id="@+id/MainPageAdView"
         xmlns:ads="http://schemas.android.com/apk/res-auto"

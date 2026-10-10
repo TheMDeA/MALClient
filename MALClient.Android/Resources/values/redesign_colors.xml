@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Redesign signature accent (emerald) — used for the new bottom navigation,
+       Home hero actions and other redesign components. Surfaces and text keep
+       using the existing ?Brush* theme attributes so light/dark mode still works. -->
+  <color name="RedesignAccent">#10B981</color>
+  <color name="RedesignAccentDark">#0B8A5F</color>
+  <color name="RedesignAccentLight">#4ADE80</color>
+  <color name="RedesignLime">#A3E635</color>
+  <color name="RedesignOnAccent">#06281C</color>
+  <color name="RedesignScrim">#99000000</color>
+  <color name="RedesignHeroGradientStart">#CC0B0D0F</color>
+  <color name="RedesignHeroGradientEnd">#000B0D0F</color>
+</resources>
