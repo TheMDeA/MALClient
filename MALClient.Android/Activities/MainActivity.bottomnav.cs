@@ -25,9 +25,12 @@ namespace MALClient.Android.Activities
             if (_bottomNav == null)
                 return;
 
-            var states = new[]
+            // Note: global:: qualifier is required — inside the MALClient.Android
+            // namespaces the unqualified Android.Resource resolves to the app's
+            // own generated Resource class (CS0117).
+            var states = new int[][]
             {
-                new[] { Android.Resource.Attribute.StateChecked },
+                new[] { global::Android.Resource.Attribute.StateChecked },
                 new int[0]
             };
             var colors = new[]
