@@ -7,6 +7,26 @@ Branch based on `Drutol/MALClient` @ `37fb71f`. Every fix lands here first under
 
 _(nothing else pending)_
 
+## [2026-10-10] — UI redesign phase 1 (bottom navigation + Home screen)
+
+APK version: **1.6.0.0** (versionCode 173), package `com.dmda.malclient`.
+
+### Added
+
+- UI redesign (phase 1): new five-tab bottom navigation (Home, Discover,
+  Schedule, My List, Profile) in the main activity, driving the existing
+  navigation so every screen keeps working. The hamburger drawer is kept
+  for the remaining features (forums, clubs, articles, news, ...). Tab
+  highlighting follows the current page, including seasonal/top/genre
+  lists (shown under Discover). My List respects the default anime/manga
+  tab setting.
+- UI redesign (phase 1): new Home landing page with a seasonal-airing hero
+  card, a continue-watching rail (from the user's list), an airing
+  spotlight rail and quick links to Discover / Schedule / My List.
+- UI redesign (phase 1): new design-system resources (emerald signature
+  accent, card styles, headline/section/body/caption text styles) built on
+  the existing theme attributes so light/dark mode keeps working.
+
 ## [2026-10-03] — feature push (calendar seasonal view, follow-system theme, Material You)
 
 APK version: **1.5.15.1** (versionCode 172), package `com.dmda.malclient`.
