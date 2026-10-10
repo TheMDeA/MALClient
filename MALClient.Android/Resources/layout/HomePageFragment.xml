@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:background="?BrushDeepBackground">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="16dp">
+
+    <!-- Hero -->
+    <FrameLayout
+        android:id="@+id/HomeHeroCard"
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:background="@drawable/redesign_card_background">
+      <FFImageLoading.Views.ImageViewAsync
+          android:id="@+id/HomeHeroImage"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:scaleType="centerCrop" />
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@drawable/redesign_hero_gradient" />
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom"
+          android:orientation="vertical"
+          android:padding="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AIRING NOW"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/RedesignAccentLight"
+            android:letterSpacing="0.12" />
+        <TextView
+            android:id="@+id/HomeHeroTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginTop="4dp" />
+        <TextView
+            android:id="@+id/HomeHeroMeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#d6d6d6"
+            android:layout_marginTop="2dp" />
+        <Button
+            android:id="@+id/HomeHeroCta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="View details"
+            style="@style/RedesignAccentButton" />
+      </LinearLayout>
+    </FrameLayout>
+
+    <!-- Quick links -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:weightSum="3">
+      <Button
+          android:id="@+id/HomeQuickDiscover"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_marginEnd="6dp"
+          android:text="Discover"
+          style="@style/RedesignAccentButton" />
+      <Button
+          android:id="@+id/HomeQuickSchedule"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_marginStart="3dp"
+          android:layout_marginEnd="3dp"
+          android:text="Schedule"
+          style="@style/RedesignAccentButton" />
+      <Button
+          android:id="@+id/HomeQuickMyList"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_marginStart="6dp"
+          android:text="My List"
+          style="@style/RedesignAccentButton" />
+    </LinearLayout>
+
+    <!-- Continue watching -->
+    <TextView
+        android:id="@+id/HomeContinueTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue watching"
+        android:layout_marginTop="20dp"
+        style="@style/RedesignSectionTitle" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/HomeContinueRail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false" />
+
+    <!-- Airing spotlight -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Airing spotlight"
+        android:layout_marginTop="20dp"
+        style="@style/RedesignSectionTitle" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/HomeSpotlightRail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:clipToPadding="false" />
+
+  </LinearLayout>
+</ScrollView>
