@@ -101,6 +101,7 @@
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Activities\MainActivity.hamburger.cs" />
     <Compile Include="Activities\MainActivity.ui.cs" />
+    <Compile Include="Activities\MainActivity.bottomnav.cs" />
     <Compile Include="Adapters\Billingdapter.cs" />
     <Compile Include="Adapters\CollectionAdapters\ObservableAdapterWithfooter.cs" />
     <Compile Include="Adapters\DialogAdapters\ScoreDialogAdapter.cs" />
@@ -154,6 +155,8 @@
     <Compile Include="Fragments\AnimeDetailsPageTabs\AnimeDetailsPageStaffTabFragment.cs" />
     <Compile Include="Fragments\AnimeListPageFragment.cs" />
     <Compile Include="Fragments\AnimeListPageFragment.ui.cs" />
+    <Compile Include="Fragments\HomePageFragment.cs" />
+    <Compile Include="Fragments\HomePageFragment.ui.cs" />
     <Compile Include="Fragments\ArticlesPageFragments\ArticlesPageFragment.cs" />
     <Compile Include="Fragments\ArticlesPageFragments\ArticlesPageTabFragment.cs" />
     <Compile Include="Fragments\CalendarFragments\CalendarPageFragment.cs" />
@@ -308,6 +311,8 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\colors.xml" />
+    <AndroidResource Include="Resources\values\redesign_colors.xml" />
+    <AndroidResource Include="Resources\values\redesign_styles.xml" />
     <AndroidResource Include="Resources\values\strings.xml" />
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values-v31\styles.xml" />
@@ -482,6 +487,8 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\dialog_corner_background.xml" />
+    <AndroidResource Include="Resources\drawable\redesign_card_background.xml" />
+    <AndroidResource Include="Resources\drawable\redesign_hero_gradient.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\get_it_on_windows.png" />
@@ -1073,6 +1080,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\HistoryPage.xml" />
+    <AndroidResource Include="Resources\layout\HomePageFragment.xml" />
+    <AndroidResource Include="Resources\layout\HomeRailItem.xml" />
+    <AndroidResource Include="Resources\menu\bottom_nav_menu.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\HistoryPageTab.xml" />
