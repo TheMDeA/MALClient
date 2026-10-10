@@ -24,6 +24,7 @@ namespace MALClient.XShared.ViewModels
             
             SimpleIoc.Default.Register<RecommendationsViewModel>();
             SimpleIoc.Default.Register<SearchPageViewModel>();
+            SimpleIoc.Default.Register<HomePageViewModel>();
             SimpleIoc.Default.Register<HummingbirdProfilePageViewModel>();
             SimpleIoc.Default.Register<CalendarPageViewModel>();
             SimpleIoc.Default.Register<MalArticlesViewModel>();
@@ -74,6 +75,8 @@ namespace MALClient.XShared.ViewModels
             => SimpleIoc.Default.GetInstance<RecommendationsViewModel>();
 
         public static SearchPageViewModel SearchPage => SimpleIoc.Default.GetInstance<SearchPageViewModel>();      
+
+        public static HomePageViewModel HomePage => SimpleIoc.Default.GetInstance<HomePageViewModel>();
 
         public static HummingbirdProfilePageViewModel HumProfilePage
             => SimpleIoc.Default.GetInstance<HummingbirdProfilePageViewModel>();

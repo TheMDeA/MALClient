@@ -102,6 +102,7 @@ namespace MALClient.Android.Activities
                 SetContentView(Resource.Layout.MainPage);
                 InitAdContainer();
                 InitBindings();
+                InitBottomNav();
                 ViewModel.MainNavigationRequested += ViewModelOnMainNavigationRequested;
                 ViewModel.MainNavigationRequested += ViewModelOnMainNavigationRequestedFirst;
                 ViewModel.MediaElementCollapsed += ViewModelOnMediaElementCollapsed;
