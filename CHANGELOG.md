@@ -27,6 +27,13 @@ APK version: **1.6.0.0** (versionCode 173), package `com.dmda.malclient`.
   accent, card styles, headline/section/body/caption text styles) built on
   the existing theme attributes so light/dark mode keeps working.
 
+### Fixed (build)
+
+- Fixed two release-build errors in the bottom navigation: a resource
+  namespace clash (`Resource.Attribute` resolving to the app's own
+  generated class) and a linker failure on the tab-selected event's nested
+  type — the tab listener now uses the plain selection interface instead.
+
 ## [2026-10-03] — feature push (calendar seasonal view, follow-system theme, Material You)
 
 APK version: **1.5.15.1** (versionCode 172), package `com.dmda.malclient`.
