@@ -5,7 +5,13 @@ Branch based on `Drutol/MALClient` @ `37fb71f`. Every fix lands here first under
 
 ## [Unreleased]
 
-_(nothing else pending)_
+- Fixed the third v1.6.0.0 release-build failure: the bottom-nav listener's
+  generated Java proxy didn't override `onNavigationItemSelected` (javac
+  JAVAC0000) because the support-design `BottomNavigationView` /
+  `IOnNavigationItemSelectedListener` pair collides with the AndroidX
+  Material copy in the same build. The bottom nav now uses the AndroidX
+  Material `BottomNavigationView` + `NavigationBarView.IOnItemSelectedListener`
+  (layout + code), which are unambiguous.
 
 ## [2026-10-10] — UI redesign phase 1 (bottom navigation + Home screen)
 

@@ -1,8 +1,9 @@
 using Android.Content.Res;
 using Android.Graphics;
-using Android.Support.Design.Widget;
 using Android.Support.V4.Content;
 using Android.Views;
+using Google.Android.Material.BottomNavigation;
+using Google.Android.Material.Navigation;
 using MALClient.Android.Resources;
 using MALClient.Models.Enums;
 using MALClient.XShared.ViewModels;
@@ -43,7 +44,7 @@ namespace MALClient.Android.Activities
             _bottomNav.ItemIconTintList = tint;
             _bottomNav.ItemTextColor = tint;
 
-            _bottomNav.SetOnNavigationItemSelectedListener(new BottomNavListener(this));
+            _bottomNav.SetOnItemSelectedListener(new BottomNavListener(this));
 
             ViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
             SyncBottomNavSelection();
@@ -53,8 +54,16 @@ namespace MALClient.Android.Activities
         /// Listener instead of the NavigationItemSelected event: the event's
         /// nested NavigationItemSelectedEventArgs type breaks the Mono linker
         /// (XALNK7000 resolution failure), the interface does not.
+        /// Uses the AndroidX Material types (not the old support-design ones):
+        /// with both Xamarin.Android.Support.Design and
+        /// Xamarin.Google.Android.Material in the build, the support-design
+        /// BottomNavigationView/IOnNavigationItemSelectedListener pair
+        /// confuses the Java stub generator — the generated proxy claimed the
+        /// AndroidX OnItemSelectedListener without overriding
+        /// onNavigationItemSelected (javac JAVAC0000). The AndroidX types are
+        /// unambiguous and sidestep both failures.
         /// </summary>
-        private class BottomNavListener : Java.Lang.Object, BottomNavigationView.IOnNavigationItemSelectedListener
+        private class BottomNavListener : Java.Lang.Object, IOnItemSelectedListener
         {
             private readonly MainActivity _activity;
 
