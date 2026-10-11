@@ -63,7 +63,7 @@ namespace MALClient.Android.Activities
         /// onNavigationItemSelected (javac JAVAC0000). The AndroidX types are
         /// unambiguous and sidestep both failures.
         /// </summary>
-        private class BottomNavListener : Java.Lang.Object, IOnItemSelectedListener
+        private class BottomNavListener : Java.Lang.Object, NavigationBarView.IOnItemSelectedListener
         {
             private readonly MainActivity _activity;
 
