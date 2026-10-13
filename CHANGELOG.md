@@ -5,6 +5,11 @@ Branch based on `Drutol/MALClient` @ `37fb71f`. Every fix lands here first under
 
 ## [Unreleased]
 
+- Fixed a startup crash (`No public constructor found in HomePageViewModel`):
+  the release linker stripped the new Home screen ViewModel's constructor
+  because SimpleIoc only creates it via reflection. The ViewModel is now
+  marked `[Preserve(AllMembers = true)]`, the same pattern the codebase
+  already uses.
 - Fixed the third v1.6.0.0 release-build failure: the bottom-nav listener's
   generated Java proxy didn't override `onNavigationItemSelected` (javac
   JAVAC0000) because the support-design `BottomNavigationView` /

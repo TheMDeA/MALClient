@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Android.Runtime;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JikanDotNet;
@@ -20,6 +21,7 @@ namespace MALClient.XShared.ViewModels.Main
     /// and airing spotlight. Reuses the existing anime list and seasonal query
     /// layers — no new data plumbing.
     /// </summary>
+    [Preserve(AllMembers = true)]
     public class HomePageViewModel : ViewModelBase
     {
         public ObservableCollection<AnimeItemViewModel> ContinueWatching { get; } =
